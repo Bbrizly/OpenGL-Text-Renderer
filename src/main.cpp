@@ -8,11 +8,11 @@
 class Main: public wolf::App
 {
 private:
-    TextRenderer* m_textRenderer;
+    Font* m_textRenderer;
 public:
     Main() : App("Text Renderer")
     {
-        m_textRenderer = new TextRenderer(this);
+        m_textRenderer = new Font(this);
         m_textRenderer->init();
     }
 

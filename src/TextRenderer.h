@@ -4,11 +4,11 @@
 
 class Grid2D;
 
-class TextRenderer: public Sample
+class Font: public Sample
 {
 public:
-    TextRenderer(wolf::App* pApp) : Sample(pApp,"2D Transforms") {}
-    ~TextRenderer();
+    Font(wolf::App* pApp) : Sample(pApp,"2D Transforms") {}
+    ~Font();
 
     void init() override;
     void update(float dt) override;

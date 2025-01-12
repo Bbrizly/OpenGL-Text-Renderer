@@ -47,7 +47,7 @@ static void TEST_MATRIX(float p_00, float p_01, float p_02,
 	mWorld[3][3] = p_22;
 }
 
-TextRenderer::~TextRenderer()
+Font::~Font()
 {
 	printf("Destroying 2D Sample\n");
 	delete m_pGrid;
@@ -56,7 +56,7 @@ TextRenderer::~TextRenderer()
 	wolf::ProgramManager::DestroyProgram(m_pProgram);
 }
 
-void TextRenderer::init()
+void Font::init()
 {
     // Only init if not already done
     if(!m_pProgram)
@@ -77,11 +77,11 @@ void TextRenderer::init()
     printf("Successfully initialized 2D Sample\n");
 }
 
-void TextRenderer::update(float dt) 
+void Font::update(float dt) 
 {
 }
 
-void TextRenderer::render(int width, int height)
+void Font::render(int width, int height)
 {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

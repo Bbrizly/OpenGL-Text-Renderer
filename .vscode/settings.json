@@ -3,6 +3,11 @@
     "files.associations": {
         "utility": "cpp",
         "string": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "map": "cpp",
+        "xstring": "cpp",
+        "iosfwd": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp"
     }
 }
