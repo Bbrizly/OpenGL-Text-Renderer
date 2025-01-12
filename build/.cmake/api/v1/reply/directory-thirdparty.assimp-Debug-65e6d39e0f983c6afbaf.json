@@ -1,0 +1,62 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"INSTALL"
+		],
+		"files" : 
+		[
+			"thirdparty/assimp/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 432,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 611,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "libassimp5.0.1-dev",
+			"destination" : "lib/cmake/assimp-5.0",
+			"paths" : 
+			[
+				"build/thirdparty/assimp/assimp-config.cmake",
+				"build/thirdparty/assimp/assimp-config-version.cmake",
+				"build/thirdparty/assimp/assimpTargets.cmake",
+				"build/thirdparty/assimp/assimpTargets-debug.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "libassimp5.0.1-dev",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"build/thirdparty/assimp/assimp.pc"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "thirdparty/assimp",
+		"source" : "thirdparty/assimp"
+	}
+}

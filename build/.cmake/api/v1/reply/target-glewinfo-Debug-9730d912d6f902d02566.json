@@ -1,0 +1,610 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "glewinfo.exe"
+		},
+		{
+			"path" : "glewinfo.pdb"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"install",
+			"target_link_libraries",
+			"add_definitions",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"thirdparty/glew/build/cmake/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 169,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 185,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 170,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 134,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 11,
+				"parent" : 5
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 57,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 60,
+				"parent" : 5
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 86,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_3DS_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_3MF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_AC_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_AMF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_ASE_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_ASSBIN_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_B3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_BLEND_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_BVH_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_C4D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_COB_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_COLLADA_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_CSM_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_DXF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_HMP_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_IFC_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_IRRMESH_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_IRR_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_LWO_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_LWS_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_M3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MD2_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MD3_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MD5_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MDC_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MDL_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MMD_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MS3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_NDO_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_NFF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OBJ_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OFF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OGRE_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OPENGEX_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_PLY_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_Q3BSP_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_Q3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_RAW_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_SIB_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_SMD_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_STEP_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_STL_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_TERRAGEN_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_X3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_XGL_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_X_IMPORTER"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "GLEW_NO_GLU"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "NO_ASSIMP"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 9,
+					"path" : "D:/Projects/Text-Renderer/thirdparty/glew/build/cmake/../../include"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"defines" : 
+			[
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_3DS_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_3MF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_AC_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_AMF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_ASE_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_ASSBIN_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_B3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_BLEND_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_BVH_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_C4D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_COB_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_COLLADA_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_CSM_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_DXF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_HMP_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_IFC_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_IRRMESH_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_IRR_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_LWO_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_LWS_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_M3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MD2_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MD3_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MD5_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MDC_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MDL_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MMD_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_MS3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_NDO_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_NFF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OBJ_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OFF_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OGRE_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_OPENGEX_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_PLY_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_Q3BSP_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_Q3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_RAW_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_SIB_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_SMD_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_STEP_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_STL_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_TERRAGEN_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_X3D_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_XGL_IMPORTER"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "ASSIMP_BUILD_NO_X_IMPORTER"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "GLEW_NO_GLU"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "NO_ASSIMP"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 9,
+					"path" : "D:/Projects/Text-Renderer/thirdparty/glew/build/cmake/../../include"
+				}
+			],
+			"language" : "RC",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "glew::@e3a2a7fed93872134c42"
+		}
+	],
+	"id" : "glewinfo::@e3a2a7fed93872134c42",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "bin"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "C:/Program Files (x86)/sample"
+		}
+	},
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "lib\\libglew32d.dll.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "-lopengl32",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "-lglu32",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
+			}
+		],
+		"language" : "C"
+	},
+	"name" : "glewinfo",
+	"nameOnDisk" : "glewinfo.exe",
+	"paths" : 
+	{
+		"build" : "thirdparty/glew/build/cmake",
+		"source" : "thirdparty/glew/build/cmake"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "thirdparty/glew/src/glewinfo.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "thirdparty/glew/build/glewinfo.rc",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

@@ -1,0 +1,331 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3,
+						5,
+						9
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "thirdparty/glfw",
+					"childIndexes" : 
+					[
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty.glfw-Debug-b14e8bbb8740fc1e516a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "thirdparty/glfw",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "thirdparty/glfw/src",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty.glfw.src-Debug-be37733e333990630c38.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "thirdparty/glfw/src",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "thirdparty/glm",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-thirdparty.glm-Debug-5b0a93af10e03e16f7db.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.2"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "thirdparty/glm"
+				},
+				{
+					"build" : "thirdparty/glm/glm",
+					"jsonFile" : "directory-thirdparty.glm.glm-Debug-a7e915986c5bf998173f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.2"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "thirdparty/glm/glm"
+				},
+				{
+					"build" : "thirdparty/assimp",
+					"childIndexes" : 
+					[
+						6,
+						8
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty.assimp-Debug-65e6d39e0f983c6afbaf.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "thirdparty/assimp"
+				},
+				{
+					"build" : "thirdparty/assimp/contrib",
+					"childIndexes" : 
+					[
+						7
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty.assimp.contrib-Debug-580f49a9bb345a727b33.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "thirdparty/assimp/contrib"
+				},
+				{
+					"build" : "thirdparty/assimp/contrib/irrXML",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty.assimp.contrib.irrXML-Debug-dd995a181839d6992395.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 3,
+					"source" : "thirdparty/assimp/contrib/irrXML",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "thirdparty/assimp/code",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty.assimp.code-Debug-640ac06108b8aac6ba09.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "thirdparty/assimp/code",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "thirdparty/glew/build/cmake",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty.glew.build.cmake-Debug-a9d743b7696194c1ad4f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 4,
+					"source" : "thirdparty/glew/build/cmake",
+					"targetIndexes" : 
+					[
+						2,
+						3,
+						4,
+						8
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "sample",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "GLFW",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						5,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "glm",
+					"parentIndex" : 0
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6,
+						7,
+						8
+					],
+					"name" : "Assimp",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						9
+					],
+					"name" : "glew",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						3,
+						4,
+						8
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 7,
+					"id" : "IrrXML::@fd0da3cb94cc4800c68d",
+					"jsonFile" : "target-IrrXML-Debug-550ab09d877b5c1439f6.json",
+					"name" : "IrrXML",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "assimp::@fb4a4c333f549723789e",
+					"jsonFile" : "target-assimp-Debug-dfe5f29b60cda4cf0819.json",
+					"name" : "assimp",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "glew::@e3a2a7fed93872134c42",
+					"jsonFile" : "target-glew-Debug-f9f35cfc742b581c0151.json",
+					"name" : "glew",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "glew_s::@e3a2a7fed93872134c42",
+					"jsonFile" : "target-glew_s-Debug-40ae64f2f96f6b233f49.json",
+					"name" : "glew_s",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "glewinfo::@e3a2a7fed93872134c42",
+					"jsonFile" : "target-glewinfo-Debug-0118c3ff558e4098157b.json",
+					"name" : "glewinfo",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "glfw::@66b0edeafaa5c4890854",
+					"jsonFile" : "target-glfw-Debug-398cdd9f86cc47bfe431.json",
+					"name" : "glfw",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sample::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sample-Debug-d10ae58179898486d829.json",
+					"name" : "sample",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "uninstall::@76eb18cc98cb9b8eb7f1",
+					"jsonFile" : "target-uninstall-Debug-f7b96c65ed0d4ad5403d.json",
+					"name" : "uninstall",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "visualinfo::@e3a2a7fed93872134c42",
+					"jsonFile" : "target-visualinfo-Debug-20f3d7afdb35b08b13b2.json",
+					"name" : "visualinfo",
+					"projectIndex" : 4
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Projects/Text Renderer/build",
+		"source" : "D:/Projects/Text Renderer"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

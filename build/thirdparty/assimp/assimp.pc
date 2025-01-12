@@ -1,0 +1,11 @@
+prefix=C:/Program Files (x86)/sample
+exec_prefix=C:/Program Files (x86)/sample/
+libdir=C:/Program Files (x86)/sample/lib
+includedir=C:/Program Files (x86)/sample/../include/include
+
+Name: sample
+Description: Import various well-known 3D model formats in an uniform manner.
+Version: 5.0.1
+Libs: -L${libdir} -lassimp
+Libs.private: -lstdc++ -lz
+Cflags: -I${includedir}
