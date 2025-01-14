@@ -1,115 +1,178 @@
 #include "TextRenderer.h"
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <iostream>
+using namespace std;
+
+TextRenderer::TextRenderer()
+    : m_pProgram(nullptr), m_vertexBuffer(nullptr), m_vertexDecl(nullptr), m_currentTextBox(nullptr) {}
+
+TextRenderer::~TextRenderer() {
+    if (m_vertexBuffer) {
+        wolf::BufferManager::DestroyBuffer(m_vertexBuffer);
+    }
+    if (m_vertexDecl) {
+        delete m_vertexDecl;
+    }
+    if (m_pProgram) {
+        wolf::ProgramManager::DestroyProgram(m_pProgram);
+    }
+}
+
+void TextRenderer::pushVertexData(wolf::VertexBuffer*& vBuffer, wolf::VertexDeclaration*& vDecl, const vector<Vertex>& vertices)
+{
+    vBuffer = wolf::BufferManager::CreateVertexBuffer(vertices.data(), vertices.size() * sizeof(Vertex));
+    vDecl = new wolf::VertexDeclaration();
+    vDecl->Begin();
+    vDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
+    vDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
+    vDecl->AppendAttribute(wolf::AT_TexCoord1, 2, wolf::CT_Float);
+    vDecl->SetVertexBuffer(vBuffer);
+    vDecl->End();
+
+    m_numVertices = vertices.size();
+}
+
+void TextRenderer::init() {
+    m_pProgram = wolf::ProgramManager::CreateProgram("data/2d.vsh", "data/2d.fsh");
+    m_vertices.clear();
+    
+    // vector<Vertex> quadVertices = {
+    //     {100.0f, 100.0f, 0.0f, 255, 0, 0, 255, 0.0f, 0.0f},
+    //     {200.0f, 100.0f, 0.0f, 255, 0, 0, 255, 1.0f, 0.0f},
+    //     {100.0f, 200.0f, 0.0f, 255, 0, 0, 255, 0.0f, 1.0f},
+
+    //     {200.0f, 100.0f, 0.0f, 255, 0, 0, 255, 1.0f, 0.0f},
+    //     {200.0f, 200.0f, 0.0f, 255, 0, 0, 255, 1.0f, 1.0f},
+    //     {100.0f, 200.0f, 0.0f, 255, 0, 0, 255, 0.0f, 1.0f},
+    // };
+
+    // m_vertices = quadVertices;
+
+    // pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
+}
+
+void TextRenderer::update(float dt) {}
+
+void TextRenderer::setTextBox(TextBox* textBox) {
+    m_currentTextBox = textBox;
+    const auto& vertices = textBox->GetVertices();
+
+    m_vertices.insert(m_vertices.end(), vertices.begin(), vertices.end());
+
+    pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
+
+}
+
+void TextRenderer::render(const glm::mat4& proj, const glm::mat4& view) {
+    if(!m_pProgram){return;}
+
+    if (!m_currentTextBox) return;
+
+    m_pProgram->Bind();
+    m_pProgram->SetUniform("projection", proj);
+    m_pProgram->SetUniform("view", view);
+    m_pProgram->SetUniform("u_texture", 0);
+    m_currentTextBox->GetFont()->GetTexture()->Bind(0);
+
+    m_vertexDecl->Bind();
+    glDrawArrays(GL_TRIANGLES, 0, m_numVertices);
+    // glDrawArraysInstanced()
+}
+
+Font* TextRenderer::createFont(const std::string& texturePath, const std::string& fontDataPath) {
+    return new Font(texturePath, fontDataPath);
+}
+
+TextBox* TextRenderer::createTextBox(Font* font, const std::string& text, float x, float y) {
+    auto textBox = new TextBox(font, text, 0.0f, 0.0f);
+    textBox->SetPosition(x, y);
+    return textBox;
+}
+
+
+/*#include "TextRenderer.h"
+#include "TextBox.h"
+#include "Font.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "../samplefw/Grid2D.h"
 
-struct Vertex
+TextRenderer::~TextRenderer()
 {
-	GLfloat x,y;
-	GLubyte r,g,b,a;
-};
-
-const unsigned char squareColor[] = { 248, 183, 50, 255 };
-const unsigned char gridLinesColor[] = { 110, 110, 110, 255 };
-
-static const Vertex squareVertices[] = {
-	{ -0.5f, -0.5f, squareColor[0],   squareColor[1], squareColor[2], squareColor[3] },
-	{ -0.5f, 0.5f, squareColor[0],   squareColor[1], squareColor[2], squareColor[3] },
-	{ 0.5f, 0.5f, squareColor[0],   squareColor[1], squareColor[2], squareColor[3] },
-
-	{ 0.5f, 0.5f, squareColor[0],   squareColor[1], squareColor[2], squareColor[3] },
-	{ 0.5f, -0.5f, squareColor[0],   squareColor[1], squareColor[2], squareColor[3] },
-	{ -0.5f, -0.5f, squareColor[0],   squareColor[1], squareColor[2], squareColor[3] },
-	
-};
-
-static glm::mat4 mWorld;
-static void TEST_MATRIX(float p_00, float p_01, float p_02,
-				        float p_10, float p_11, float p_12, 
-				        float p_20, float p_21, float p_22)
-{
-	mWorld[0][0] = p_00;
-	mWorld[0][1] = p_01;
-	mWorld[0][2] = p_02;
-	mWorld[0][3] = 0.0f;
-
-	mWorld[1][0] = p_10;
-	mWorld[1][1] = p_11;
-	mWorld[1][2] = p_12;
-	mWorld[1][3] = 0.0f;
-
-	mWorld[2][0] = 0.0f;
-	mWorld[2][1] = 0.0f;
-	mWorld[2][2] = 1.0f;
-	mWorld[2][3] = 0.0f;
-
-	mWorld[3][0] = p_20;
-	mWorld[3][1] = p_21;
-	mWorld[3][2] = 0.0f;
-	mWorld[3][3] = p_22;
+    if (m_pGrid) {
+        delete m_pGrid;
+        m_pGrid = nullptr;
+    }
+    if (m_pDecl) {
+        delete m_pDecl;
+        m_pDecl = nullptr;
+    }
+    if (m_pVB) {
+        wolf::BufferManager::DestroyBuffer(m_pVB);
+        m_pVB = nullptr;
+    }
+    if (m_pProgram) {
+        wolf::ProgramManager::DestroyProgram(m_pProgram);
+        m_pProgram = nullptr;
+    }
 }
 
-Font::~Font()
+void TextRenderer::PushVertexData(wolf::VertexBuffer*& vBuffer, wolf::VertexDeclaration*& vDecl, vector<Vertex>& vertices)
 {
-	printf("Destroying 2D Sample\n");
-	delete m_pGrid;
-	delete m_pDecl;
-	wolf::BufferManager::DestroyBuffer(m_pVB);
-	wolf::ProgramManager::DestroyProgram(m_pProgram);
+    m_pVB = wolf::BufferManager::CreateVertexBuffer(nullptr, 0);
+    m_pDecl = new wolf::VertexDeclaration();
+    
+    m_pDecl->Begin();
+    m_pDecl->AppendAttribute(wolf::AT_Position, 2, wolf::CT_Float);
+    m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
+    m_pDecl->SetVertexBuffer(m_pVB);
+    m_pDecl->End();
 }
 
-void Font::init()
+void TextRenderer::init()
 {
-    // Only init if not already done
-    if(!m_pProgram)
-    {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
+
+    if (!m_pProgram) {
         m_pProgram = wolf::ProgramManager::CreateProgram("data/2d.vsh", "data/2d.fsh");
-        m_pVB = wolf::BufferManager::CreateVertexBuffer(squareVertices, sizeof(Vertex) * 3 * 2);
 
-        m_pDecl = new wolf::VertexDeclaration();
-        m_pDecl->Begin();
-        m_pDecl->AppendAttribute(wolf::AT_Position, 2, wolf::CT_Float);
-        m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
-        m_pDecl->SetVertexBuffer(m_pVB);
-        m_pDecl->End();
+        
+        PushVertexData(m_pVB, m_pDecl, m_numVertices);
 
         m_pGrid = new Grid2D(30);
     }
-
-    printf("Successfully initialized 2D Sample\n");
 }
 
-void Font::update(float dt) 
+void TextRenderer::update(float dt)
 {
+	//Updates?
 }
 
-void Font::render(int width, int height)
+void TextRenderer::render(int width, int height)
 {
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glClearColor(0.3f, 0.3f, 0.3f, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    float fWidth = (float)width;
-    float fHeight = (float)height;
-    glm::mat4 mProj = glm::ortho(0.0f,fWidth,0.0f,fHeight,0.0f,1000.0f);
-    glm::mat4 mView = glm::translate(glm::mat4(1.0f), glm::vec3(fWidth/2.0f,fHeight/2.0f,0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(40.0f,40.0f,40.0f));
-
-    mProj = mProj * mView;
-
-	// CHANGE HERE
-
-	TEST_MATRIX(cos(0.785), -sin(0.785), 0.0f,
-				sin(0.785), cos(0.785), 0.0f,
-			    3.0f, 1.0f, 1.0f);
-
-	// END CHANGE HERE
-
+    float fWidth = static_cast<float>(width);
+    float fHeight = static_cast<float>(height);
+    glm::mat4 mProj = glm::ortho(0.0f, fWidth, 0.0f, fHeight, 0.0f, 1000.0f);
 
     glDepthMask(GL_FALSE);
     m_pGrid->render(glm::mat4(1.0f), mProj);
-
-    m_pProgram->SetUniform("projection", mProj);
-	m_pProgram->Bind();
-    
     glDepthMask(GL_TRUE);
-	m_pDecl->Bind();
-    m_pProgram->SetUniform("world", mWorld);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
+
+TextBox* TextRenderer::createTextBox(const std::string& text, Font& font, float x, float y, float scale)
+{
+    return new TextBox(text, font, x, y, scale);
+}
+
+Font* TextRenderer::createFont(const std::string& texturePath, const std::string& fontDataPath)
+{
+    return new Font(texturePath, fontDataPath);
+}
+*/

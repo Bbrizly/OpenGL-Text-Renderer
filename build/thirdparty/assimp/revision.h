@@ -22,7 +22,7 @@
 #ifdef  NDEBUG
 #define VER_ORIGINAL_FILENAME_STR   "assimp.dll"
 #else
-#define VER_ORIGINAL_FILENAME_STR   "assimp.dll"
+#define VER_ORIGINAL_FILENAME_STR   "assimpd.dll"
 #endif //  NDEBUG
 
 #endif // ASSIMP_REVISION_H_INC

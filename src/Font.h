@@ -1,20 +1,32 @@
 #pragma once
 #include "../wolf/wolf.h"
+#include <string>
+#include <unordered_map>
+#include "CharInfo.h"
 
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
+using namespace std;
 
 
-class Font
-{
+class Font {
 private:
-    wolf::Texture* fontTexture;
-    std::map<char, float[4]> charExtents;
+    void LoadFont(const string& fontPath);
+
+    wolf::Texture* m_texture;
+    unordered_map<char, CharInfo> m_characters;
+    // unordered_map<pair<char, char>, int> m_kerning;
+    
+    int m_lineHeight; // Distance between lines
+    int m_scaleW;     // Texture width
+    int m_scaleH;     // Texture height
 
 public:
-    Font(const std::string& texturePath, const std::string& fontDataPath);
-    wolf::Texture* GetTextureForChar(char c);
-    void GetExtentsForChar(char c, float* uStart, float* uEnd, float* vStart, float* vEnd);
+    Font(const string& texturePath, const string& fontPath);
+    ~Font();
+
+    const CharInfo& GetCharacter(char c) const;
+    wolf::Texture* GetTexture() const;
+
+    // const unordered_map<std::pair<char, char>, int>& GetKerning();
+    const unordered_map<pair<char, char>, int>& GetKerning() const;
 
 };
