@@ -1,8 +1,4 @@
 #include "Font.h"
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-#include <iostream>
 
 using namespace std;
 

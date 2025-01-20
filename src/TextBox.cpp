@@ -33,6 +33,27 @@ void TextBox::SetColor(float r, float g, float b, float a) {
 void TextBox::SetVisualization(bool visualization){
     m_visualization = visualization;
 }
+
+float TextBox::CalculateWordWidth(const std::string& word) const {
+    float wordWidth = 0.0f;
+    for (size_t i = 0; i < word.size(); ++i) {
+        char c = word[i];
+        const CharInfo& ch = m_font->GetCharacter(c);
+
+        // Add kerning adjustment for consecutive characters
+        if (i > 0) {
+            char prevChar = word[i - 1];
+            auto kerningIt = m_font->GetKerning().find({prevChar, c});
+            if (kerningIt != m_font->GetKerning().end()) {
+                wordWidth += kerningIt->second;
+            }
+        }
+
+        wordWidth += ch.xAdvance;
+    }
+    return wordWidth;
+}
+
 // /*
 void TextBox::GenerateVertices() {
     m_vertices.clear();
@@ -45,6 +66,52 @@ void TextBox::GenerateVertices() {
     cout << "Calculated Alignment Cursor: (" << cursor.x << ", " << cursor.y << ")" <<endl;
     float lineWidth = 0.0f; // Keeps track of the width of the current line
 
+    // Split text into words
+    std::istringstream wordStream(m_text);
+    std::string word;
+
+    
+    while (wordStream >> word) {
+        // Calculate the width of the word
+        float wordWidth = CalculateWordWidth(word);
+
+        // Check if the word fits in the current line
+        if (lineWidth + wordWidth > m_width) {
+            // Move to the next line
+            cursor.x = m_position.x;
+            cursor.y -= m_font->GetLineHeight();
+            lineWidth = 0.0f;
+        }
+
+        // Render the word character by character
+        for (size_t i = 0; i < word.size(); ++i) {
+            char c = word[i];
+            const CharInfo& ch = m_font->GetCharacter(c);
+
+            // Adjust cursor for kerning
+            ApplyKerning(i, c, cursor);
+
+            // Generate vertices for the current character
+            GenerateCharacterVertices(ch, cursor, textureWidth, textureHeight);
+
+            // Advance cursor and line width
+            cursor.x += ch.xAdvance;
+            lineWidth += ch.xAdvance;
+        }
+
+        // Add a space after the word (but don't render it yet)
+        if (lineWidth + m_font->GetCharacter(' ').xAdvance <= m_width) {
+            cursor.x += m_font->GetCharacter(' ').xAdvance;
+            lineWidth += m_font->GetCharacter(' ').xAdvance;
+        }
+    }
+
+    // Generate bounding box visualization if needed
+    if (m_visualization) {
+        GenerateBoundingBoxVertices();
+    }
+
+    /*
     for (size_t i = 0; i < m_text.size(); ++i) {
         char c = m_text[i];
         const CharInfo& ch = m_font->GetCharacter(c);
@@ -87,6 +154,7 @@ void TextBox::GenerateVertices() {
     //     cout << " Color: (" << (int)vertex.r << ", " << (int)vertex.g << ", " << (int)vertex.b << ")";
     //     cout << " TexCoords: (" << vertex.u << ", " << vertex.v << ")" << endl;
     // }
+*/
 }
 
 vec2 TextBox::CalculateAlignmentCursor() {

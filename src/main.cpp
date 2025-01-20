@@ -23,13 +23,13 @@ public:
         m_textRenderer->init();
 
         // Create Font and TextBox
-        Font* font = m_textRenderer->createFont("data/English_Alphabet.tga", "data/English_Alphabet.fnt");
-        Font* font1 = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
+        Font* font1 = m_textRenderer->createFont("data/English_Alphabet.tga", "data/English_Alphabet.fnt");
+        Font* font = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
         float width = 100, height = 300;
-        TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010.0f, 700.0f, width, height);
-        TextBox* textBox = m_textRenderer->createTextBox(font, "STAMINA: 100%", 500.0f, 300.0f, width, height);
-        TextBox* textBoc = m_textRenderer->createTextBox(font, "AMMO: 60/60", 1000.0f, 700.0f, width, height);
-        TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics 436: Assignment 1", 200.0f, 200.0f, width, height);
+        TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 300, 10);
+        TextBox* textBox = m_textRenderer->createTextBox(font, "STAMINA: 100%", 500, 300, 400, 10);
+        TextBox* textBoc = m_textRenderer->createTextBox(font, "AMMO: 60/60", 1000, 700, 500, 10);
+        TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics 436: Assignment 1", 200, 200, 300, 10);
         // Graphics 436: Assignment 1
 
         // Pass TextBox to TextRenderer

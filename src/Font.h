@@ -4,6 +4,10 @@
 #include <unordered_map>
 #include <utility>
 #include "CharInfo.h"
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <iostream>
 
 using namespace std;
 

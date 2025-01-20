@@ -6,6 +6,8 @@
 #include "Font.h"
 #include "Vertex.h"
 #include "CharInfo.h"
+#include <fstream>
+#include <sstream>
 
 class TextBox {
 private:
@@ -24,6 +26,7 @@ private:
     void ApplyKerning(size_t index, char c, glm::vec2& cursor); // Adjusts cursor for kerning
     void GenerateCharacterVertices(const CharInfo& ch, glm::vec2 cursor, float textureWidth, float textureHeight); // Generates vertices for a single character
     void GenerateBoundingBoxVertices();     // Generates vertices for the bounding box
+    float CalculateWordWidth(const std::string& word) const;
     void GenerateVertices();
 
 public:
