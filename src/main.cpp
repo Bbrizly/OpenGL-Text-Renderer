@@ -24,16 +24,28 @@ public:
 
         // Create Font and TextBox
         Font* font = m_textRenderer->createFont("data/English_Alphabet.tga", "data/English_Alphabet.fnt");
-        // Font* font1 = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
-        TextBox* textBox = m_textRenderer->createTextBox(font, "Man, What the fuck is a kilometer!?", 200.0f, 600.0f);
-        TextBox* textBoc = m_textRenderer->createTextBox(font, "Meow :3", 200.0f, 550.0f);
-        TextBox* textBov = m_textRenderer->createTextBox(font, "Sentence structure18209476", 200.0f, 500.0f);
+        Font* font1 = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
+        float width = 100, height = 300;
+        TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010.0f, 700.0f, width, height);
+        TextBox* textBox = m_textRenderer->createTextBox(font, "STAMINA: 100%", 500.0f, 300.0f, width, height);
+        TextBox* textBoc = m_textRenderer->createTextBox(font, "AMMO: 60/60", 1000.0f, 700.0f, width, height);
+        TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics 436: Assignment 1", 200.0f, 200.0f, width, height);
+        // Graphics 436: Assignment 1
 
         // Pass TextBox to TextRenderer
+        textBoz->SetColor(255,0,0,255);
         textBox->SetColor(0,0,255,255);
         textBoc->SetColor(0,255,0,255);
-        textBov->SetColor(255,0,0,255);
+        textBov->SetColor(0,0,0,255);
 
+        textBov->SetAlignment(0);
+
+        // textBoz->SetVisualization(true);
+        // textBox->SetVisualization(true);
+        // textBoc->SetVisualization(true);
+        // textBov->SetVisualization(true);
+
+        m_textRenderer->setTextBox(textBoz);
         m_textRenderer->setTextBox(textBox);
         m_textRenderer->setTextBox(textBoc);
         m_textRenderer->setTextBox(textBov);
@@ -50,7 +62,9 @@ public:
     void render() override {
         // glViewport(0, 0, m_width, m_height);
         // return;
-        glClearColor(0,0,0,255);
+
+        glClearColor(0,0.5,0.5,255);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
 
         // Define projection and view matrices

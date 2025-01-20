@@ -32,7 +32,7 @@ public:
     void pushVertexData(wolf::VertexBuffer*& vBuffer, wolf::VertexDeclaration*& vDecl, const vector<Vertex>& vertices);
 
     Font* createFont(const std::string& texturePath, const std::string& fontDataPath);
-    TextBox* createTextBox(Font* font, const std::string& text, float x, float y);
+    TextBox* createTextBox(Font* font, const std::string& text, float x, float y, float width, float height);
 
     void setTextBox(TextBox* textBox);
 };

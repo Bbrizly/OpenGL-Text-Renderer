@@ -11,14 +11,21 @@ class TextBox {
 private:
     Font* m_font;
     std::string m_text;
-    float m_width, m_height;
+    float m_width = 400;
+    float m_height = 400;
     glm::vec4 m_color;
     glm::vec2 m_position;
-    int m_alignment;
+    int m_alignment = 0;
     std::vector<Vertex> m_vertices;
-    bool m_visualization = false;
-    
-    void visualizeTextBox();
+    bool m_visualization = true;
+
+    glm::vec2 CalculateAlignmentCursor();   // Calculates the starting cursor position based on alignment
+    float CalculateTextWidth() const;       // Computes total width of the text
+    void ApplyKerning(size_t index, char c, glm::vec2& cursor); // Adjusts cursor for kerning
+    void GenerateCharacterVertices(const CharInfo& ch, glm::vec2 cursor, float textureWidth, float textureHeight); // Generates vertices for a single character
+    void GenerateBoundingBoxVertices();     // Generates vertices for the bounding box
+    void GenerateVertices();
+
 public:
     TextBox(Font* font, const std::string& text, float width, float height);
 
@@ -28,7 +35,6 @@ public:
     void SetColor(float r, float g, float b, float a);
     void SetVisualization(bool visualize);
 
-    void GenerateVertices();
     const std::vector<Vertex>& GetVertices() const;
     Font* GetFont() const; // Add this method
 

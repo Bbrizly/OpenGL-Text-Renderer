@@ -31,6 +31,7 @@ class BufferManager
 		static IndexBuffer* CreateIndexBuffer(const unsigned short* pData, unsigned int numIndices);
 
 		static void DestroyBuffer(Buffer* pBuf);
+        static void UpdateVertexBuffer(VertexBuffer* pBuffer, const void* pData, unsigned int length, unsigned int offset = 0);
 		//-------------------------------------------------------------------------
 
 	private:

@@ -21,34 +21,38 @@ TextRenderer::~TextRenderer() {
 
 void TextRenderer::pushVertexData(wolf::VertexBuffer*& vBuffer, wolf::VertexDeclaration*& vDecl, const vector<Vertex>& vertices)
 {
-    vBuffer = wolf::BufferManager::CreateVertexBuffer(vertices.data(), vertices.size() * sizeof(Vertex));
-    vDecl = new wolf::VertexDeclaration();
-    vDecl->Begin();
-    vDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
-    vDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
-    vDecl->AppendAttribute(wolf::AT_TexCoord1, 2, wolf::CT_Float);
-    vDecl->SetVertexBuffer(vBuffer);
-    vDecl->End();
-
+    // if(!vBuffer)
+    // {
+        vBuffer = wolf::BufferManager::CreateVertexBuffer(vertices.data(), vertices.size() * sizeof(Vertex));
+        vDecl = new wolf::VertexDeclaration();
+        vDecl->Begin();
+        vDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
+        vDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
+        vDecl->AppendAttribute(wolf::AT_TexCoord1, 2, wolf::CT_Float);
+        vDecl->SetVertexBuffer(vBuffer);
+        vDecl->End();
+    // }
+    
+    // wolf::BufferManager::UpdateVertexBuffer(vBuffer, vertices.data(), vertices.size() * sizeof(Vertex));
+    // cout<<vertices.size()<<endl;
     m_numVertices = vertices.size();
 }
-
+ 
 void TextRenderer::init() {
     m_pProgram = wolf::ProgramManager::CreateProgram("data/2d.vsh", "data/2d.fsh");
     m_vertices.clear();
+
+    
     
     // vector<Vertex> quadVertices = {
     //     {100.0f, 100.0f, 0.0f, 255, 0, 0, 255, 0.0f, 0.0f},
     //     {200.0f, 100.0f, 0.0f, 255, 0, 0, 255, 1.0f, 0.0f},
     //     {100.0f, 200.0f, 0.0f, 255, 0, 0, 255, 0.0f, 1.0f},
-
     //     {200.0f, 100.0f, 0.0f, 255, 0, 0, 255, 1.0f, 0.0f},
     //     {200.0f, 200.0f, 0.0f, 255, 0, 0, 255, 1.0f, 1.0f},
     //     {100.0f, 200.0f, 0.0f, 255, 0, 0, 255, 0.0f, 1.0f},
     // };
-
     // m_vertices = quadVertices;
-
     // pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
 }
 
@@ -62,6 +66,15 @@ void TextRenderer::setTextBox(TextBox* textBox) {
 
     pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
 
+    // // Debugging
+    // std::cout << "Vertices in m_vertices:" << std::endl;
+    // for (size_t i = 0; i < m_vertices.size(); ++i) {
+    //     const Vertex& vertex = m_vertices[i];
+    //     std::cout << "Vertex " << i << ": "
+    //             << "Position(" << vertex.x << ", " << vertex.y << ", " << vertex.z << "), "
+    //             << "Color(" << (int)vertex.r << ", " << (int)vertex.g << ", " << (int)vertex.b << ", " << (int)vertex.a << "), "
+    //             << "TexCoords(" << vertex.u << ", " << vertex.v << ")" << std::endl;
+    // }
 }
 
 void TextRenderer::render(const glm::mat4& proj, const glm::mat4& view) {
@@ -84,8 +97,8 @@ Font* TextRenderer::createFont(const std::string& texturePath, const std::string
     return new Font(texturePath, fontDataPath);
 }
 
-TextBox* TextRenderer::createTextBox(Font* font, const std::string& text, float x, float y) {
-    auto textBox = new TextBox(font, text, 0.0f, 0.0f);
+TextBox* TextRenderer::createTextBox(Font* font, const std::string& text, float x, float y, float width, float height) {
+    auto textBox = new TextBox(font, text, width, height);
     textBox->SetPosition(x, y);
     return textBox;
 }

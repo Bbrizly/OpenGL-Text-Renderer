@@ -3,6 +3,6 @@
 
 struct CharInfo {
     float uStart, uEnd, vStart, vEnd; // Texture coordinates
-    float xOffset, yOffset;          // Position offsets
-    float xAdvance;                 // Advance to the next character
+    float xOffset, yOffset;           // Position offsets
+    float xAdvance;                   // Advance to the next character
 };

@@ -21,6 +21,7 @@ class VertexBuffer : public Buffer
 		// PUBLIC INTERFACE
 		//-------------------------------------------------------------------------
 		virtual void Bind();
+		void Update(const void* p_pData, unsigned int p_uiOffset, unsigned int p_uiLength);
 		virtual void Write(const void* p_pData, int p_iLength = -1);
 		//-------------------------------------------------------------------------
 

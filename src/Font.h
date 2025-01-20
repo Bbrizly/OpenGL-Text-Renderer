@@ -2,9 +2,18 @@
 #include "../wolf/wolf.h"
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include "CharInfo.h"
 
 using namespace std;
+
+// Custom hash function for std::pair<char, char>
+struct PairHash {
+    template <class T1, class T2>
+    size_t operator()(const pair<T1, T2>& pair) const {
+        return hash<T1>()(pair.first) ^ (hash<T2>()(pair.second) << 1);
+    }
+};
 
 
 class Font {
@@ -13,9 +22,10 @@ private:
 
     wolf::Texture* m_texture;
     unordered_map<char, CharInfo> m_characters;
+    unordered_map<pair<char, char>, int, PairHash> m_kerning;
     // unordered_map<pair<char, char>, int> m_kerning;
     
-    int m_lineHeight; // Distance between lines
+    int m_lineHeight = 0; // Distance between lines
     int m_scaleW;     // Texture width
     int m_scaleH;     // Texture height
 
@@ -24,9 +34,10 @@ public:
     ~Font();
 
     const CharInfo& GetCharacter(char c) const;
+    const int GetLineHeight();
     wolf::Texture* GetTexture() const;
 
-    // const unordered_map<std::pair<char, char>, int>& GetKerning();
-    const unordered_map<pair<char, char>, int>& GetKerning() const;
+    // const unordered_map<pair<char, char>, int>& GetKerning();
+    const unordered_map<pair<char, char>, int, PairHash>& GetKerning() const;
 
 };

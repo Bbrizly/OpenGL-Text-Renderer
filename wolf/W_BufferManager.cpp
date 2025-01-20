@@ -44,6 +44,17 @@ IndexBuffer* BufferManager::CreateIndexBuffer(const unsigned short* pData, unsig
 }
 
 //----------------------------------------------------------
+// Updates a vertex buffer with new data
+//----------------------------------------------------------
+void BufferManager::UpdateVertexBuffer(VertexBuffer* pBuffer, const void* pData, unsigned int length, unsigned int offset)
+{
+    if (pBuffer)
+    {
+        pBuffer->Update(pData, offset, length);
+    }
+}
+
+//----------------------------------------------------------
 // Destroys a buffer. 
 //----------------------------------------------------------
 void BufferManager::DestroyBuffer(Buffer* pBuf)
