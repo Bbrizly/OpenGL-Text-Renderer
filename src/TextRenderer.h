@@ -13,13 +13,9 @@ class Grid2D;
 
 class TextRenderer {
 private:
-    wolf::Program* m_pProgram;
-    wolf::VertexBuffer* m_vertexBuffer;
-    wolf::VertexDeclaration* m_vertexDecl;
-    vector<Vertex> m_vertices;
-    int m_numVertices;
+    wolf::Program* TextShader;
 
-    TextBox* m_currentTextBox;
+    vector<TextBox*> m_textBoxes;
     
 public:
     TextRenderer();
@@ -29,9 +25,7 @@ public:
     void update(float dt);
     void render(const glm::mat4& proj, const glm::mat4& view);
 
-    void pushVertexData(wolf::VertexBuffer*& vBuffer, wolf::VertexDeclaration*& vDecl, const vector<Vertex>& vertices);
-
-    Font* createFont(const std::string& texturePath, const std::string& fontDataPath);
+    Font* createFont(const std::string& fontDataPath);
     TextBox* createTextBox(Font* font, const std::string& text, float x, float y, float width, float height);
 
     void setTextBox(TextBox* textBox);

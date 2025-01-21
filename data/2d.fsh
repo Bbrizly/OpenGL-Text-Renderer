@@ -8,6 +8,11 @@ uniform sampler2DArray u_texture;
 
 void main()
 {
+    if(v_layer < 0)
+    {
+        FragColor = v_color;
+        return;
+    }
     //from pixel shader Documenttation
     //vec4 pixel = texture(u_texture, v_uv1);
     vec4 pixel = texture(u_texture, vec3(v_uv1, v_layer));

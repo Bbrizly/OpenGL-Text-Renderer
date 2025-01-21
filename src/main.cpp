@@ -24,32 +24,35 @@ public:
 
         // Create Font and TextBox
         // Font* font = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
-        Font* font = m_textRenderer->createFont("data/test.tga", "data/test.fnt");
-        // Font* font1 = m_textRenderer->createFont("data/English_Alphabet.tga", "data/English_Alphabet.fnt"); //"_"+i+".tga"
+        Font* font = m_textRenderer->createFont("data/test.fnt");
+        Font* font1 = m_textRenderer->createFont("data/English_Alphabet.fnt");
         float width = 100, height = 300;
-        TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 300, 10);
-        TextBox* textBox = m_textRenderer->createTextBox(font, "STAMINA: 100%", 500, 300, 400, 10);
-        TextBox* textBoc = m_textRenderer->createTextBox(font, "AMMO: 60/60", 1000, 700, 500, 10);
-        TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics 436: Assignment 1", 200, 200, 300, 10);
+        TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 400, 100);
+        TextBox* textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 300, 400, 100);
+        TextBox* textBoc = m_textRenderer->createTextBox(font1, "AM\nMO: 60/60", 1000, 700, 500, 100);
+        TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics 436: Assignment 1", 100, 200, 400, 100);
         // Graphics 436: Assignment 1
 
         // Pass TextBox to TextRenderer
-        textBoz->SetColor(255,0,0,255);
-        textBox->SetColor(0,0,255,255);
-        textBoc->SetColor(0,255,0,255);
-        textBov->SetColor(0,0,0,255);
+        // textBoz->SetColor(255,0,0,255);
+        // textBox->SetColor(0,0,255,255);
+        // textBoc->SetColor(0,255,0,255);
+        // textBov->SetColor(0,0,0,255);
 
-        textBov->SetAlignment(0);
-
-        // textBoz->SetVisualization(true);
-        // textBox->SetVisualization(true);
-        // textBoc->SetVisualization(true);
-        // textBov->SetVisualization(true);
+        // textBoz->SetAlignment(1);
+        // textBox->SetAlignment(1);
+        // textBoc->SetAlignment(1);
+        // textBov->SetAlignment(1);
 
         m_textRenderer->setTextBox(textBoz);
         m_textRenderer->setTextBox(textBox);
         m_textRenderer->setTextBox(textBoc);
         m_textRenderer->setTextBox(textBov);
+
+        cout<<"FINAL TEXTURE: "<<textBoz->GetFont()->GetTexture()<<endl;
+        cout<<"FINAL TEXTURE: "<<textBox->GetFont()->GetTexture()<<endl;
+        cout<<"FINAL TEXTURE: "<<textBoc->GetFont()->GetTexture()<<endl;
+        cout<<"FINAL TEXTURE: "<<textBov->GetFont()->GetTexture()<<endl;
     }
 
     ~Main() {
