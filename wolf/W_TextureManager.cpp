@@ -5,6 +5,8 @@
 // See header for notes
 //-----------------------------------------------------------------------------
 #include "W_TextureManager.h"
+#include "iostream"
+using namespace std;
 
 namespace wolf
 {
@@ -109,6 +111,7 @@ Texture* TextureManager::CreateRenderTexture(unsigned int width, unsigned int he
 //----------------------------------------------------------
 void TextureManager::DestroyTexture(Texture* pTex)
 {
+    cout<<"TYRING TO DELETE: "<<pTex<<endl;
 	std::map<std::string, Entry*>::iterator iter;
 	for( iter = m_textures.begin(); iter != m_textures.end(); iter++ )
 	{

@@ -26,7 +26,7 @@ private:
     void ArrayTextureOfAllFiles(string filename, int totalPages);
     // void LoadFont(const string& fontPath, const std::vector<std::string>& texturePaths);
 
-    wolf::Texture* m_texture;
+    wolf::Texture* m_arrayTexture;
     unordered_map<char, CharInfo> m_characters;
     unordered_map<pair<char, char>, int, PairHash> m_kerning;
     // unordered_map<pair<char, char>, int> m_kerning;
@@ -43,7 +43,6 @@ public:
     const int GetLineHeight();
     wolf::Texture* GetTexture() const;
 
-    // const unordered_map<pair<char, char>, int>& GetKerning();
     const unordered_map<pair<char, char>, int, PairHash>& GetKerning() const;
 
 };

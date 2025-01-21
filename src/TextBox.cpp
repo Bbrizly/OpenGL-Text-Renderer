@@ -11,6 +11,7 @@ TextBox::TextBox(Font* font, const string& text, float width, float height, wolf
     m_color = vec4(255);
     m_pProgram = shader;
     // m_color = glm::vec4(1.0f);
+    cout<<"INITIALIZED"<<endl;
 }
 TextBox::~TextBox() {
     if (m_vertexBuffer) {
@@ -19,6 +20,9 @@ TextBox::~TextBox() {
     if (m_vertexDecl) {
         delete m_vertexDecl;
     }
+    // if (m_font){
+    //     delete m_font;
+    // }
 }
 
 void TextBox::SetText(const string& text) {
@@ -28,7 +32,9 @@ void TextBox::SetText(const string& text) {
 
 void TextBox::SetPosition(float x, float y) {
     m_position = glm::vec2(x, y);
+        cout<<"POSIITION"<<endl;
     GenerateVertices();
+        cout<<"VERTICIES"<<endl;
 }
 
 void TextBox::SetAlignment(int alignment) {
@@ -72,32 +78,56 @@ float TextBox::CalculateWordWidth(const std::string& word){
     return wordWidth;
 }
 
-vec2 TextBox::CalculateAlignmentCursor() {
-    float textWidth = CalculateWordWidth(m_text);
-
-    switch (m_alignment) {
-        case 0: // Leftaligned
-            return vec2(m_position.x, m_position.y);
-        case 1: // Centeraligned
-            return vec2(m_position.x + (m_width - textWidth) / 2, m_position.y);
-        case 2: // Rightaligned
-            return vec2(m_position.x + (m_width - textWidth), m_position.y);
-        default: // Default lleft alignment
-            return vec2(m_position.x, m_position.y);
-    }
-}
-
 // /*
 void TextBox::GenerateVertices() {
     m_vertices.clear();
 
-    if (m_visualization) {
+    if (!m_visualization) {
         GenerateBoundingBoxVertices();
     }
 
     float textureWidth = m_font->GetTexture()->GetWidth();
     float textureHeight = m_font->GetTexture()->GetHeight();
+    // Split text into lines based on '\n'
+    std::vector<std::string> lines;
+    std::stringstream ss(m_text);
+    std::string line;
+    while (std::getline(ss, line)) {
+        lines.push_back(line);
+    }
 
+    float cursorY = m_position.y;
+    for (const auto& currentLine : lines) {
+        float lineWidth = CalculateWordWidth(currentLine);
+        glm::vec2 cursor = CalculateAlignmentCursor(currentLine, lineWidth, cursorY);
+
+        // Iterate over characters in the line
+        CharInfo prevCharInfo = m_font->GetCharacter(' '); // Initialize with space for kerning
+        for (size_t i = 0; i < currentLine.size(); ++i) {
+            char c = currentLine[i];
+            if (c == '\n') continue; // Already handled by splitting lines
+
+            const CharInfo& ch = m_font->GetCharacter(c);
+
+            // Apply kerning
+            ApplyKerning(i,c,cursor);
+            // auto kerningIt = m_font->GetKerning().find({ static_cast<char>(prevCharInfo.id), c });
+            // if (kerningIt != m_font->GetKerning().end()) {
+            //     cursor.x += kerningIt->second;
+            // }
+
+            GenerateCharacterVertices(ch, cursor, textureWidth, textureHeight);
+
+            cursor.x += ch.xAdvance;
+            prevCharInfo = ch;
+        }
+
+        // Move cursor to next line
+        cursorY -= m_font->GetLineHeight();
+    }
+    pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
+
+    /*
     // Compute the starting cursor position based on alignment
     vec2 cursor = CalculateAlignmentCursor();
     // cout << "Calculated Alignment Cursor: (" << cursor.x << ", " << cursor.y << ")" <<endl;
@@ -108,6 +138,8 @@ void TextBox::GenerateVertices() {
     string word;
     
     bool dumb = false;
+
+
     while (wordStream >> word) {
         // Calculate the width of the word
         float wordWidth = CalculateWordWidth(word);
@@ -146,6 +178,20 @@ void TextBox::GenerateVertices() {
 
     pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
     cout<<"TExxture: "<<m_font->GetTexture()<<endl;
+    */
+}
+
+vec2 TextBox::CalculateAlignmentCursor(const std::string& line, float lineWidth, float cursorY) {
+    switch (m_alignment) {
+        case 0: // Left-aligned
+            return glm::vec2(m_position.x, cursorY);
+        case 1: // Center-aligned
+            return glm::vec2(m_position.x + (m_width - lineWidth) / 2.0f, cursorY);
+        case 2: // Right-aligned
+            return glm::vec2(m_position.x + (m_width - lineWidth), cursorY);
+        default:
+            return glm::vec2(m_position.x, cursorY);
+    }
 }
 
 void TextBox::ApplyKerning(size_t index, char c, vec2& cursor) {
@@ -170,12 +216,17 @@ void TextBox::GenerateCharacterVertices(const CharInfo& ch, vec2 cursor, float t
     float uEnd = (ch.uStart + w) / textureWidth;
     float vStart = ch.vStart / textureHeight;
     float vEnd = (ch.vStart + h) / textureHeight;
-    int page = ch.page;
+    GLfloat page = (GLfloat)(ch.page);
+    
+    GLubyte r = (GLubyte)(m_color.x);
+    GLubyte g = (GLubyte)(m_color.y);
+    GLubyte b = (GLubyte)(m_color.z);
+    GLubyte a = (GLubyte)(m_color.w);
 
-    Vertex v1 = {xpos, ypos - h, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uStart, vEnd, page};   // Bottom left
-    Vertex v2 = {xpos + w, ypos - h, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uEnd, vEnd, page}; // Bottom right
-    Vertex v3 = {xpos, ypos, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uStart, vStart, page};     // Top left
-    Vertex v4 = {xpos + w, ypos, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uEnd, vStart, page};   // Top right
+    Vertex v1 = {xpos, ypos - h, 0.0f, r, g, b, a, uStart, vEnd, page};   // Bottom left
+    Vertex v2 = {xpos + w, ypos - h, 0.0f, r, g, b, a, uEnd, vEnd, page}; // Bottom right
+    Vertex v3 = {xpos, ypos, 0.0f, r, g, b, a, uStart, vStart, page};     // Top left
+    Vertex v4 = {xpos + w, ypos, 0.0f, r, g, b, a, uEnd, vStart, page};   // Top right
 
     m_vertices.push_back(v1);
     m_vertices.push_back(v2);
@@ -187,34 +238,43 @@ void TextBox::GenerateCharacterVertices(const CharInfo& ch, vec2 cursor, float t
 }
 
 void TextBox::GenerateBoundingBoxVertices() {
+    return;
+    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     float uStart = 0;
     float uEnd = 1;
     float vStart = 0;
     float vEnd = 1;
-    int layer = -1;
+    // int layer = -1;
+    
+    GLfloat layer = (GLfloat)(-1);
     vec4 color = vec4(0, 0, 0, 255);
+    
+    GLubyte r = (GLubyte)(color.x);
+    GLubyte g = (GLubyte)(color.y);
+    GLubyte b = (GLubyte)(color.z);
+    GLubyte a = (GLubyte)(color.w);
 
     Vertex a1 = {
         m_position.x, m_position.y - m_height, 0.0f,
-        color.x, color.y, color.z, color.w,
+        r, g, b, a,
         uStart, vEnd,
         layer};
 
     Vertex a2 = {
         m_position.x + m_width, m_position.y - m_height, 0.0f,
-        color.x, color.y, color.z, color.w,
+        r, g, b, a,
         uEnd, vEnd,
         layer};
 
     Vertex a3 = {
         m_position.x, m_position.y, 0.0f,
-        color.x, color.y, color.z, color.w,
+        r, g, b, a,
         uStart, vStart,
         layer};
 
     Vertex a4 = {
         m_position.x + m_width, m_position.y, 0.0f,
-        color.x, color.y, color.z, color.w,
+        r, g, b, a,
         uEnd, vStart,
         layer};
 
@@ -256,8 +316,11 @@ void TextBox::Render(const glm::mat4& proj, const glm::mat4& view)
     m_pProgram->Bind();
     m_pProgram->SetUniform("projection", proj);
     m_pProgram->SetUniform("view", view);
-    m_pProgram->SetUniform("u_texture", 0);
+
     m_font->GetTexture()->Bind(0);
+    m_pProgram->SetUniform("u_texture", 0);
+
+    // cout<<"Binding: "<<m_font->GetTexture()<<endl;
 
     m_vertexDecl->Bind();
     glDrawArrays(GL_TRIANGLES, 0, m_numVertices);

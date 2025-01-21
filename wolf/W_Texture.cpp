@@ -146,7 +146,8 @@ Texture::~Texture()
 void Texture::Bind(int texUnit) const
 {
 	glActiveTexture(GL_TEXTURE0 + texUnit);
-	glBindTexture(GL_TEXTURE_2D, m_glTex);
+    glBindTexture(m_target, m_glTex); // use m_target
+	// glBindTexture(GL_TEXTURE_2D, m_glTex);
 }
 
 //----------------------------------------------------------
@@ -225,9 +226,13 @@ void Texture::SetWrapMode(WrapMode uWrap, WrapMode vWrap)
 	if( m_uWrap == uWrap && m_vWrap == vWrap )
 		return; // Nothing to do, move along!
 
-    Bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gs_aWrapMap[uWrap]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gs_aWrapMap[vWrap]);
+	Bind(); // This will glBindTexture(m_target, m_glTex)
+	glTexParameteri(m_target, GL_TEXTURE_WRAP_S, gs_aWrapMap[uWrap]);
+	glTexParameteri(m_target, GL_TEXTURE_WRAP_T, gs_aWrapMap[vWrap]);
+
+    // Bind();
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gs_aWrapMap[uWrap]);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gs_aWrapMap[vWrap]);
 	m_uWrap = uWrap;
 	m_vWrap = vWrap;
 }
@@ -238,6 +243,7 @@ void Texture::SetWrapMode(WrapMode uWrap, WrapMode vWrap)
 //----------------------------------------------------------
 void Texture::SetFilterMode(FilterMode minFilter, FilterMode magFilter)
 {
+
     if( magFilter == FM_Invalid )
 		magFilter = minFilter;
 
@@ -275,6 +281,7 @@ void Texture::SetFilterMode(FilterMode minFilter, FilterMode magFilter)
         default: ;            
 	}
 
+	Bind();
 	m_minFilter = minFilter;
 	m_magFilter = magFilter;
 }

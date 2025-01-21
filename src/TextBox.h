@@ -28,7 +28,7 @@ private:
     bool m_visualization = true;
     bool broke = false;
 
-    glm::vec2 CalculateAlignmentCursor();   // Calculates the starting cursor position based on alignment
+    glm::vec2 CalculateAlignmentCursor(const std::string& line, float lineWidth, float cursorY);   // Calculates the starting cursor position based on alignment
     void ApplyKerning(size_t index, char c, glm::vec2& cursor); // Adjusts cursor for kerning
     void GenerateCharacterVertices(const CharInfo& ch, glm::vec2 cursor, float textureWidth, float textureHeight); // Generates vertices for a single character
     void GenerateBoundingBoxVertices();     // Generates vertices for the bounding box

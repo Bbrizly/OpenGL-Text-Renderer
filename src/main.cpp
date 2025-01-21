@@ -11,6 +11,12 @@ class Main : public wolf::App {
 private:
     TextRenderer* m_textRenderer;
 
+    
+    TextBox* textBoz;
+    TextBox* textBox;
+    TextBox* textBoc;
+    TextBox* textBov;
+
 public:
     Main() : App("Text Renderer") {
         
@@ -24,13 +30,28 @@ public:
 
         // Create Font and TextBox
         // Font* font = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
-        Font* font = m_textRenderer->createFont("data/test.fnt");
-        Font* font1 = m_textRenderer->createFont("data/English_Alphabet.fnt");
+        // Font* font1 = m_textRenderer->createFont("data/English_Alphabet.fnt");
+        // Font* font = m_textRenderer->createFont("data/test.fnt");
+
+        // Font font1("data/English_Alphabet.fnt");
+        // Font font("data/test.fnt");
+        
+        Font* font1 = new Font("data/English_Alphabet.fnt");
+        Font* font  = new Font("data/test.fnt");
+        Font* font2 = new Font("data/amphabet.fnt");
+
+        // Font* font1 = &f1;
+        // Font* font = &f2;
+
         float width = 100, height = 300;
-        TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 400, 100);
-        TextBox* textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 300, 400, 100);
-        TextBox* textBoc = m_textRenderer->createTextBox(font1, "AM\nMO: 60/60", 1000, 700, 500, 100);
-        TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics 436: Assignment 1", 100, 200, 400, 100);
+        textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 400, 100);
+        textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 300, 400, 100);
+        textBoc = m_textRenderer->createTextBox(font1, "AM\nMO: 60/60", 900, 700, 300, 50);
+        textBov = m_textRenderer->createTextBox(font, "Graphics\n 436: As\nsignment 1", 100, 500, 400, 100);
+        // TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 400, 100);
+        // TextBox* textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 300, 400, 100);
+        // TextBox* textBoc = m_textRenderer->createTextBox(font1, "AM\nMO: 60/60", 900, 700, 300, 50);
+        // TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics\n 436: As\nsignment 1", 100, 500, 400, 100);
         // Graphics 436: Assignment 1
 
         // Pass TextBox to TextRenderer
@@ -39,20 +60,20 @@ public:
         // textBoc->SetColor(0,255,0,255);
         // textBov->SetColor(0,0,0,255);
 
-        // textBoz->SetAlignment(1);
-        // textBox->SetAlignment(1);
-        // textBoc->SetAlignment(1);
-        // textBov->SetAlignment(1);
+        textBoz->SetAlignment(1);
+        textBox->SetAlignment(1);
+        textBoc->SetAlignment(1);
+        textBov->SetAlignment(1);
 
         m_textRenderer->setTextBox(textBoz);
         m_textRenderer->setTextBox(textBox);
         m_textRenderer->setTextBox(textBoc);
         m_textRenderer->setTextBox(textBov);
 
-        cout<<"FINAL TEXTURE: "<<textBoz->GetFont()->GetTexture()<<endl;
-        cout<<"FINAL TEXTURE: "<<textBox->GetFont()->GetTexture()<<endl;
-        cout<<"FINAL TEXTURE: "<<textBoc->GetFont()->GetTexture()<<endl;
-        cout<<"FINAL TEXTURE: "<<textBov->GetFont()->GetTexture()<<endl;
+        // cout<<"FINAL TEXTURE: "<<textBoz->GetFont()->GetTexture()<<endl;
+        // cout<<"FINAL TEXTURE: "<<textBox->GetFont()->GetTexture()<<endl;
+        // cout<<"FINAL TEXTURE: "<<textBoc->GetFont()->GetTexture()<<endl;
+        // cout<<"FINAL TEXTURE: "<<textBov->GetFont()->GetTexture()<<endl;
     }
 
     ~Main() {
@@ -75,8 +96,14 @@ public:
         glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(m_width), 0.0f, static_cast<float>(m_height), -1.0f, 1.0f);
         glm::mat4 view = glm::mat4(1.0f);
 
+        textBoz->Render(proj,view);
+        textBox->Render(proj,view);
+        textBoc->Render(proj,view);
+        textBov->Render(proj,view);
+        
+
         // Render using TextRenderer
-        m_textRenderer->render(proj, view);
+        // m_textRenderer->render(proj, view);
 
         // m_textRenderer->render(m_width, m_height);
     }

@@ -7,9 +7,10 @@ Font::Font(const string& fontPath) {
 }
 
 Font::~Font() {
-    if (m_texture)
-        wolf::TextureManager::DestroyTexture(m_texture);
-        m_texture = nullptr;
+    cout<<"DESTRUCTOR"<<endl;
+    if (m_arrayTexture)
+        wolf::TextureManager::DestroyTexture(m_arrayTexture);
+        m_arrayTexture = nullptr;
 }
 
 void Font::ArrayTextureOfAllFiles(string filename, int totalPages)
@@ -31,7 +32,8 @@ void Font::ArrayTextureOfAllFiles(string filename, int totalPages)
         files.push_back(textureFile);
     }
 
-    m_texture = wolf::TextureManager::CreateAutoArrayTexture(files);
+    m_arrayTexture = wolf::TextureManager::CreateAutoArrayTexture(files);
+    cout<<"Im here"<<endl;
 }
 
 void Font::LoadFont(const string& fontPath){//, const vector<string>& texturePaths) {
@@ -147,7 +149,7 @@ const CharInfo& Font::GetCharacter(char c) const {
 }
 
 wolf::Texture* Font::GetTexture() const {
-    return m_texture;
+    return m_arrayTexture;
 }
 
 const unordered_map<std::pair<char, char>, int, PairHash>& Font::GetKerning() const {
