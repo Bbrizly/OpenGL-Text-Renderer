@@ -223,11 +223,12 @@ void TextBox::GenerateCharacterVertices(const CharInfo& ch, vec2 cursor, float t
     float uEnd = (ch.uStart + w) / textureWidth;
     float vStart = ch.vStart / textureHeight;
     float vEnd = (ch.vStart + h) / textureHeight;
+    int page = ch.page;
 
-    Vertex v1 = {xpos, ypos - h, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uStart, vEnd};   // Bottom left
-    Vertex v2 = {xpos + w, ypos - h, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uEnd, vEnd}; // Bottom right
-    Vertex v3 = {xpos, ypos, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uStart, vStart};     // Top left
-    Vertex v4 = {xpos + w, ypos, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uEnd, vStart};   // Top right
+    Vertex v1 = {xpos, ypos - h, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uStart, vEnd, page};   // Bottom left
+    Vertex v2 = {xpos + w, ypos - h, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uEnd, vEnd, page}; // Bottom right
+    Vertex v3 = {xpos, ypos, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uStart, vStart, page};     // Top left
+    Vertex v4 = {xpos + w, ypos, 0.0f, m_color.x, m_color.y, m_color.z, m_color.w, uEnd, vStart, page};   // Top right
 
     m_vertices.push_back(v1);
     m_vertices.push_back(v2);

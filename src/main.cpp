@@ -23,8 +23,9 @@ public:
         m_textRenderer->init();
 
         // Create Font and TextBox
-        Font* font1 = m_textRenderer->createFont("data/English_Alphabet.tga", "data/English_Alphabet.fnt");
-        Font* font = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
+        // Font* font = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
+        Font* font = m_textRenderer->createFont("data/test.tga", "data/test.fnt");
+        // Font* font1 = m_textRenderer->createFont("data/English_Alphabet.tga", "data/English_Alphabet.fnt"); //"_"+i+".tga"
         float width = 100, height = 300;
         TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 300, 10);
         TextBox* textBox = m_textRenderer->createTextBox(font, "STAMINA: 100%", 500, 300, 400, 10);

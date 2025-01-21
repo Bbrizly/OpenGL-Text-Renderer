@@ -29,6 +29,7 @@ void TextRenderer::pushVertexData(wolf::VertexBuffer*& vBuffer, wolf::VertexDecl
         vDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
         vDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
         vDecl->AppendAttribute(wolf::AT_TexCoord1, 2, wolf::CT_Float);
+        vDecl->AppendAttribute(wolf::AT_TexCoord2, 1, wolf::CT_Float);
         vDecl->SetVertexBuffer(vBuffer);
         vDecl->End();
     // }
@@ -94,7 +95,7 @@ void TextRenderer::render(const glm::mat4& proj, const glm::mat4& view) {
 }
 
 Font* TextRenderer::createFont(const std::string& texturePath, const std::string& fontDataPath) {
-    return new Font(texturePath, fontDataPath);
+    return new Font(fontDataPath);
 }
 
 TextBox* TextRenderer::createTextBox(Font* font, const std::string& text, float x, float y, float width, float height) {

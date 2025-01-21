@@ -22,7 +22,9 @@ struct PairHash {
 
 class Font {
 private:
-    void LoadFont(const string& fontPath);
+    void LoadFont(const string& fontPath);//, const std::vector<std::string>& texturePaths);
+    void ArrayTextureOfAllFiles(string filename, int totalPages);
+    // void LoadFont(const string& fontPath, const std::vector<std::string>& texturePaths);
 
     wolf::Texture* m_texture;
     unordered_map<char, CharInfo> m_characters;
@@ -34,7 +36,7 @@ private:
     int m_scaleH;     // Texture height
 
 public:
-    Font(const string& texturePath, const string& fontPath);
+    Font(const string& fontPath);
     ~Font();
 
     const CharInfo& GetCharacter(char c) const;
