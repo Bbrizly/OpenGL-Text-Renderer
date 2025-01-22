@@ -1,18 +1,15 @@
 #include "TextBox.h"
-#include <iostream>
-
-#include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-TextBox::TextBox(Font* font, const string& text, float width, float height, wolf::Program* shader)
-    : m_font(font), m_text(text), m_width(width), m_height(height), m_alignment(0) {
+TextBox::TextBox(Font* font, const string& text, float width, float height, wolf::Program* shader, TextTable* pTable)
+    : m_font(font), m_text(text), m_width(width), m_height(height), m_pTextTable(0) {
     
     // cout << "TextBox initialized with Font at address: " << m_font << endl;
     m_color = vec4(255);
     m_pProgram = shader;
-    // m_color = glm::vec4(1.0f);
     cout<<"INITIALIZED"<<endl;
 }
+
 TextBox::~TextBox() {
     if (m_vertexBuffer) {
         wolf::BufferManager::DestroyBuffer(m_vertexBuffer);
@@ -20,13 +17,21 @@ TextBox::~TextBox() {
     if (m_vertexDecl) {
         delete m_vertexDecl;
     }
-    // if (m_font){
-    //     delete m_font;
-    // }
+}
+
+#pragma region Setters
+void TextBox::SetTextTable(TextTable* pTable) {
+    m_pTextTable = pTable;
+    GenerateVertices();
 }
 
 void TextBox::SetText(const string& text) {
-    m_text = text;
+    // m_text = text;
+    if(m_pTextTable) {
+        m_text = m_pTextTable->Substitute(text);
+    } else {
+        m_text = text;
+    }
     GenerateVertices();
 }
 
@@ -38,7 +43,15 @@ void TextBox::SetPosition(float x, float y) {
 }
 
 void TextBox::SetAlignment(int alignment) {
-    m_alignment = alignment;
+    // 0=left, 1=center, 2=right
+    m_hAlign = alignment;
+    GenerateVertices();
+}
+
+// Add a new function for vertical alignment
+void TextBox::SetVerticalAlignment(int vAlign) {
+    // 0=top, 1=middle, 2=bottom
+    m_vAlign = vAlign;
     GenerateVertices();
 }
 
@@ -51,7 +64,26 @@ void TextBox::SetVisualization(bool visualization){
     m_visualization = visualization;
 }
 
-float TextBox::CalculateWordWidth(const std::string& word){
+void TextBox::SetShrinkToFit(bool enable) {
+    m_shrinkToFit = enable;
+    GenerateVertices();
+}
+#pragma endregion
+
+void TextBox::printf(const char* fmt, ...) {
+    if(!fmt) return;
+    char buf[1024];
+
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
+
+    // Now call our existing SetText(...) with that result
+    SetText(string(buf));
+}
+
+float TextBox::CalculateWordWidth(const string& word){
     float wordWidth = 0.0f;
     for (size_t i = 0; i < word.size(); ++i) {
         char c = word[i];
@@ -78,27 +110,92 @@ float TextBox::CalculateWordWidth(const std::string& word){
     return wordWidth;
 }
 
-// /*
 void TextBox::GenerateVertices() {
     m_vertices.clear();
 
-    if (!m_visualization) {
+    if (m_visualization) {
         GenerateBoundingBoxVertices();
     }
+
+    float m_scale = 1.0f;
+    if (m_shrinkToFit && !m_text.empty()) {
+        float testScale = 1.0f;
+        for (int tries = 0; tries < 50; tries++) {
+            // measure total bounding box at 'testScale'
+            float neededWidth=0.0f;
+            float neededHeight=0.0f;
+
+            // Split text into lines
+            std::vector<std::string> lines;
+            {
+                std::stringstream ss(m_text);
+                std::string l;
+                while(std::getline(ss,l)) {
+                    lines.push_back(l);
+                }
+                if(lines.empty()) lines.push_back("");
+            }
+
+            // The total height is number of lines * lineHeight * scale
+            neededHeight = lines.size() * m_font->GetLineHeight() * testScale;
+
+            // The max line width among them
+            float maxWidth=0.0f;
+            for(const auto& oneLine: lines){
+                float w = CalculateWordWidth(oneLine) * testScale;
+                if(w>maxWidth) maxWidth=w;
+            }
+            neededWidth=maxWidth;
+
+            // check if fits
+            if(neededWidth <= m_width && neededHeight <= m_height) {
+                // good, we can keep this scale
+                m_scale=testScale;
+                break;
+            }
+            // else reduce scale, e.g. multiply by 0.9
+            testScale *= 0.9f;
+            if(testScale < 0.7f) {
+                // extremely small, just stop
+                m_scale=testScale;
+                break;
+            }
+        }
+    }
+
 
     float textureWidth = m_font->GetTexture()->GetWidth();
     float textureHeight = m_font->GetTexture()->GetHeight();
     // Split text into lines based on '\n'
-    std::vector<std::string> lines;
-    std::stringstream ss(m_text);
-    std::string line;
-    while (std::getline(ss, line)) {
-        lines.push_back(line);
+
+    vector<string> lines;
+    {
+        stringstream ss(m_text);
+        string line;
+        while (getline(ss, line)) {
+            lines.push_back(line);
+        }
+        if(lines.empty()) lines.push_back("");
     }
 
+    // measure total text block height = numberOfLines * lineHeight * scale
+    float totalTextHeight = lines.size() * m_font->GetLineHeight() * m_scale;
+
+    // We'll start by default from top
     float cursorY = m_position.y;
+    // 0=top, 1=middle, 2=bottom
+    if(m_vAlign == 1) {
+        cursorY = m_position.y - (m_height - totalTextHeight)*0.5f;
+    }
+    else if(m_vAlign == 2) {
+        cursorY = m_position.y - (m_height - totalTextHeight);
+    }
+
+    // float cursorY = m_position.y;
+
+
     for (const auto& currentLine : lines) {
-        float lineWidth = CalculateWordWidth(currentLine);
+        float lineWidth = CalculateWordWidth(currentLine) * m_scale;
         glm::vec2 cursor = CalculateAlignmentCursor(currentLine, lineWidth, cursorY);
 
         // Iterate over characters in the line
@@ -109,80 +206,22 @@ void TextBox::GenerateVertices() {
 
             const CharInfo& ch = m_font->GetCharacter(c);
 
-            // Apply kerning
             ApplyKerning(i,c,cursor);
-            // auto kerningIt = m_font->GetKerning().find({ static_cast<char>(prevCharInfo.id), c });
-            // if (kerningIt != m_font->GetKerning().end()) {
-            //     cursor.x += kerningIt->second;
-            // }
 
-            GenerateCharacterVertices(ch, cursor, textureWidth, textureHeight);
+            GenerateCharacterVertices(ch, cursor, textureWidth, textureHeight, m_scale);
 
-            cursor.x += ch.xAdvance;
+            cursor.x += (ch.xAdvance * m_scale);
             prevCharInfo = ch;
         }
 
         // Move cursor to next line
-        cursorY -= m_font->GetLineHeight();
+        cursorY -= m_font->GetLineHeight() * m_scale;
     }
     pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
-
-    /*
-    // Compute the starting cursor position based on alignment
-    vec2 cursor = CalculateAlignmentCursor();
-    // cout << "Calculated Alignment Cursor: (" << cursor.x << ", " << cursor.y << ")" <<endl;
-    float lineWidth = 0.0f; // Keeps track of the width of the current line
-
-    // Split text into words
-    istringstream wordStream(m_text);
-    string word;
-    
-    bool dumb = false;
-
-
-    while (wordStream >> word) {
-        // Calculate the width of the word
-        float wordWidth = CalculateWordWidth(word);
-
-        // Check if the word fits in the current line
-        if (lineWidth + wordWidth > m_width || dumb) {
-            // Move to the next line
-            broke = false, dumb = false;
-
-            // cursor = CalculateAlignmentCursor();
-            cursor.x = m_position.x;
-            cursor.y -= m_font->GetLineHeight();
-            lineWidth = 0.0f;
-        }
-
-        // Render the word character by character
-        for (size_t i = 0; i < word.size(); ++i) {
-            char c = word[i];
-
-            const CharInfo& ch = m_font->GetCharacter(c);
-            ApplyKerning(i, c, cursor);
-            GenerateCharacterVertices(ch, cursor, textureWidth, textureHeight);
-
-            cursor.x += ch.xAdvance;
-            lineWidth += ch.xAdvance;
-        }
-
-        // Add a space after the word (but don't render it yet)
-        if (lineWidth + m_font->GetCharacter(' ').xAdvance <= m_width) {
-            cursor.x += m_font->GetCharacter(' ').xAdvance;
-            lineWidth += m_font->GetCharacter(' ').xAdvance;
-        }
-        if(broke) dumb = true;
-    }
-    
-
-    pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
-    cout<<"TExxture: "<<m_font->GetTexture()<<endl;
-    */
 }
 
 vec2 TextBox::CalculateAlignmentCursor(const std::string& line, float lineWidth, float cursorY) {
-    switch (m_alignment) {
+    switch (m_hAlign) {
         case 0: // Left-aligned
             return glm::vec2(m_position.x, cursorY);
         case 1: // Center-aligned
@@ -206,7 +245,7 @@ void TextBox::ApplyKerning(size_t index, char c, vec2& cursor) {
     }
 }
 
-void TextBox::GenerateCharacterVertices(const CharInfo& ch, vec2 cursor, float textureWidth, float textureHeight) {
+void TextBox::GenerateCharacterVertices(const CharInfo& ch, vec2 cursor, float textureWidth, float textureHeight, float scale) {
     float xpos = cursor.x + ch.xOffset;
     float ypos = cursor.y - ch.yOffset;
     float w = ch.uEnd;
@@ -222,11 +261,14 @@ void TextBox::GenerateCharacterVertices(const CharInfo& ch, vec2 cursor, float t
     GLubyte g = (GLubyte)(m_color.y);
     GLubyte b = (GLubyte)(m_color.z);
     GLubyte a = (GLubyte)(m_color.w);
+    
+    w *= scale;
+    h *= scale;
 
-    Vertex v1 = {xpos, ypos - h, 0.0f, r, g, b, a, uStart, vEnd, page};   // Bottom left
-    Vertex v2 = {xpos + w, ypos - h, 0.0f, r, g, b, a, uEnd, vEnd, page}; // Bottom right
-    Vertex v3 = {xpos, ypos, 0.0f, r, g, b, a, uStart, vStart, page};     // Top left
-    Vertex v4 = {xpos + w, ypos, 0.0f, r, g, b, a, uEnd, vStart, page};   // Top right
+    Vertex v1 = {xpos,     ypos - h, 0.0f, r,g,b,a, uStart,vEnd,   page};  // Bottom left
+    Vertex v2 = {xpos + w, ypos - h, 0.0f, r,g,b,a, uEnd,  vEnd,   page}; // Bottom right
+    Vertex v3 = {xpos,     ypos,     0.0f, r,g,b,a, uStart,vStart,page};     // Top left
+    Vertex v4 = {xpos + w, ypos,     0.0f, r,g,b,a, uEnd,  vStart,page};   // Top right
 
     m_vertices.push_back(v1);
     m_vertices.push_back(v2);
@@ -238,16 +280,13 @@ void TextBox::GenerateCharacterVertices(const CharInfo& ch, vec2 cursor, float t
 }
 
 void TextBox::GenerateBoundingBoxVertices() {
-    return;
-    //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     float uStart = 0;
     float uEnd = 1;
     float vStart = 0;
     float vEnd = 1;
-    // int layer = -1;
     
     GLfloat layer = (GLfloat)(-1);
-    vec4 color = vec4(0, 0, 0, 255);
+    vec4 color = vec4(255, 255, 255, 255);
     
     GLubyte r = (GLubyte)(color.x);
     GLubyte g = (GLubyte)(color.y);

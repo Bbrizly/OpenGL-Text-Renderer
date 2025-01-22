@@ -7,6 +7,7 @@
 #include "Vertex.h"
 #include <string>
 #include <vector>
+#include "TextTable.h"
 using namespace std;
 // #include "Grid2D.h"
 class Grid2D;
@@ -16,12 +17,14 @@ private:
     wolf::Program* TextShader;
 
     vector<TextBox*> m_textBoxes;
+
+    TextTable* m_pTextTable = nullptr;
     
 public:
     TextRenderer();
     ~TextRenderer();
 
-    void init();
+    void init(TextTable* pTable);
     void update(float dt);
     void render(const glm::mat4& proj, const glm::mat4& view);
 

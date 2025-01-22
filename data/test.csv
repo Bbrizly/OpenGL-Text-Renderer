@@ -1,0 +1,5 @@
+ID,English,Spanish
+str_greeting,Hello {playerName}!,Hola {playerName}!
+str_score,Score: {scoreValue},Scora: {scoreValue}
+str_angry,Fuck you,PUTA!!
+str_question,What?,Que?

@@ -1,40 +1,34 @@
 #pragma once
-#include <string>
-#include <unordered_map>
-
-class TextTable {
-public:
-    TextTable();
-    ~TextTable();
-
-    void Load(const std::string& filePath);
-    void SetLanguage(const std::string& language);
-    std::string GetString(const std::string& id) const;
-
-private:
-    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> m_strings;
-    std::string m_currentLanguage;
-};
-
-/*#pragma once
-#include "../wolf/wolf.h"
-
 #include <fstream>
+#include <stdexcept>
 #include <sstream>
 #include <iostream>
-
 #include <string>
 #include <unordered_map>
 #include <vector>
+using namespace std;
 
 class TextTable {
-private:
-    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> table;
-    std::vector<std::string> languages;
-    std::string currentLanguage;
-
 public:
-    bool Load(const std::string& filePath);
-    void SetLanguage(const std::string& language);
-    std::string GetString(const std::string& id) const;
-};*/
+    TextTable(string path);
+    ~TextTable();
+
+
+    void SetLanguage(const string& language);
+
+    string GetString(const string& id) const;
+
+    void SetStringProperty(const string& key, const string& value);
+    
+    string Substitute(const string& input) const;
+
+private:
+
+    void LoadCSV(const string& filePath);
+
+    unordered_map<string, unordered_map<string, string>> m_strings;
+
+    unordered_map<string, string> m_substitutions;
+
+    string m_currentLanguage;
+};

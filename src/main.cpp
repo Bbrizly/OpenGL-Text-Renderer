@@ -6,6 +6,7 @@
 #include "TextRenderer.h"
 #include "Font.h"
 #include "TextBox.h"
+#include "TextTable.h"
 
 class Main : public wolf::App {
 private:
@@ -26,44 +27,52 @@ public:
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         m_textRenderer = new TextRenderer();
-        m_textRenderer->init();
-
+        
+        TextTable table("data/test.csv");
+        m_textRenderer->init(&table);
+        
         // Create Font and TextBox
-        // Font* font = m_textRenderer->createFont("data/amphabet.tga", "data/amphabet.fnt");
-        // Font* font1 = m_textRenderer->createFont("data/English_Alphabet.fnt");
+        Font* font = m_textRenderer->createFont("data/amphabet.fnt");
+        Font* font1 = m_textRenderer->createFont("data/English_Alphabet.fnt");
+        Font* font2 = m_textRenderer->createFont("data/amphabet.fnt");
         // Font* font = m_textRenderer->createFont("data/test.fnt");
 
-        // Font font1("data/English_Alphabet.fnt");
-        // Font font("data/test.fnt");
+        textBoz = m_textRenderer->createTextBox(font2, "HEALTH: 87%", 010, 700, 200, 100);
+        textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 600, 400, 400);
+        textBoc = m_textRenderer->createTextBox(font2, "AM\nMO: 60/60", 900, 700, 300, 50);
+        textBov = m_textRenderer->createTextBox(font2, "Graphics\n 436: As\nsignment 1", 100, 500, 400, 100);
         
-        Font* font1 = new Font("data/English_Alphabet.fnt");
-        Font* font  = new Font("data/test.fnt");
-        Font* font2 = new Font("data/amphabet.fnt");
 
-        // Font* font1 = &f1;
-        // Font* font = &f2;
+        table.SetLanguage("English");
+        table.SetStringProperty("playerName","Bassam Kamal");
+        table.SetStringProperty("scoreValue","999");
 
-        float width = 100, height = 300;
-        textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 400, 100);
-        textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 300, 400, 100);
-        textBoc = m_textRenderer->createTextBox(font1, "AM\nMO: 60/60", 900, 700, 300, 50);
-        textBov = m_textRenderer->createTextBox(font, "Graphics\n 436: As\nsignment 1", 100, 500, 400, 100);
-        // TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 400, 100);
-        // TextBox* textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 300, 400, 100);
-        // TextBox* textBoc = m_textRenderer->createTextBox(font1, "AM\nMO: 60/60", 900, 700, 300, 50);
-        // TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics\n 436: As\nsignment 1", 100, 500, 400, 100);
+        std::string greet = table.GetString("str_greeting");
+        std::cout << "Greeting in English: " << greet << "\n";
+
+        table.SetLanguage("Spanish");
+        greet = table.GetString("str_greeting");
+        
         // Graphics 436: Assignment 1
 
         // Pass TextBox to TextRenderer
-        // textBoz->SetColor(255,0,0,255);
-        // textBox->SetColor(0,0,255,255);
-        // textBoc->SetColor(0,255,0,255);
-        // textBov->SetColor(0,0,0,255);
+        textBoz->SetColor(255,0,0,255);
+        textBox->SetColor(0,0,255,255);
+        textBoc->SetColor(0,255,0,255);
+        textBov->SetColor(0,0,0,255);
 
-        textBoz->SetAlignment(1);
+        // textBoz->SetAlignment(1);
         textBox->SetAlignment(1);
-        textBoc->SetAlignment(1);
-        textBov->SetAlignment(1);
+        textBox->SetVerticalAlignment(2);
+        // textBoc->SetAlignment(1);
+        // textBov->SetAlignment(1);
+        
+        textBox->printf("Your score is %d", 9001);
+        textBoc->SetText(table.GetString("str_greeting"));
+        
+        textBoc->SetTextTable(&table);
+        textBoc->SetText("Hello {playerName}");
+
 
         m_textRenderer->setTextBox(textBoz);
         m_textRenderer->setTextBox(textBox);
