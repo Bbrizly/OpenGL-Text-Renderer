@@ -66,7 +66,7 @@ void TextTable::SetLanguage(const string& language) {
     if(m_strings.find(language)==m_strings.end()) {
         throw runtime_error("Language not found: " + language);
     }
-    cout<<"BITCH"<<endl;
+    // cout<<"BITCH"<<endl;
     m_currentLanguage=language;
 }
 
@@ -99,10 +99,10 @@ string TextTable::GetString(const string& id) const {
 
 string TextTable::Substitute(const string& input) const {
     string out = input;
-    cout<<"\n\nWTFFFF\n\n";
+    // cout<<"\n\nWTFFFF\n\n";
     for(const auto& kv : m_substitutions) {
         string placeholder = "{" + kv.first + "}";
-        cout<<placeholder<<endl;
+        // cout<<placeholder<<endl;
         size_t pos=0;
         while((pos=out.find(placeholder,pos))!=string::npos) {
             out.replace(pos, placeholder.size(), kv.second);
@@ -110,7 +110,7 @@ string TextTable::Substitute(const string& input) const {
         }
     }
     
-    cout<<"\n\n\n";
+    // cout<<"\n\n\n";
     return out;
 }
 

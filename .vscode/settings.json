@@ -86,6 +86,7 @@
         "semaphore": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "iomanip": "cpp"
     }
 }
