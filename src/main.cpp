@@ -12,11 +12,6 @@ class Main : public wolf::App {
 private:
     TextRenderer* m_textRenderer;
 
-    
-    TextBox* textBoz;
-    TextBox* textBox;
-    TextBox* textBoc;
-    TextBox* textBov;
 
 public:
     Main() : App("Text Renderer") {
@@ -32,57 +27,52 @@ public:
         m_textRenderer->init(&table);
         
         // Create Font and TextBox
-        Font* font = m_textRenderer->createFont("data/amphabet.fnt");
+        Font* font = m_textRenderer->createFont("data/test.fnt");
         Font* font1 = m_textRenderer->createFont("data/English_Alphabet.fnt");
         Font* font2 = m_textRenderer->createFont("data/amphabet.fnt");
         // Font* font = m_textRenderer->createFont("data/test.fnt");
 
-        textBoz = m_textRenderer->createTextBox(font2, "HEALTH: 87%", 010, 700, 200, 100);
-        textBox = m_textRenderer->createTextBox(font1, "STA\nMINA: 100%", 500, 600, 400, 400);
-        textBoc = m_textRenderer->createTextBox(font2, "AM\nMO: 60/60", 900, 700, 300, 50);
-        textBov = m_textRenderer->createTextBox(font2, "Graphics\n 436: As\nsignment 1", 100, 500, 400, 100);
+        TextBox* textBoz = m_textRenderer->createTextBox(font, "HEALTH: 87%", 010, 700, 200, 100);
+        TextBox* textBox = m_textRenderer->createTextBox(font, "Your score is 9001 and it is crazyy", 500, 600, 400, 400);
+        TextBox* textBoc = m_textRenderer->createTextBox(font1, "AM\nMO: 60/60", 900, 700, 300, 50);
+        TextBox* textBov = m_textRenderer->createTextBox(font, "Graphics\n 436: As\nsignment 1", 100, 500, 400, 100);
         
 
         table.SetLanguage("English");
         table.SetStringProperty("playerName","Bassam Kamal");
         table.SetStringProperty("scoreValue","999");
 
-        std::string greet = table.GetString("str_greeting");
-        std::cout << "Greeting in English: " << greet << "\n";
+        std::string greet;// = table.GetString("str_greeting");
+        // std::cout << "Greeting in English: " << greet << "\n";
 
-        table.SetLanguage("Spanish");
+        // table.SetLanguage("Spanish");
         greet = table.GetString("str_greeting");
+        std::cout << "Greeting in Spanish: " << greet << "\n";
         
         // Graphics 436: Assignment 1
 
         // Pass TextBox to TextRenderer
         textBoz->SetColor(255,0,0,255);
         textBox->SetColor(0,0,255,255);
-        textBoc->SetColor(0,255,0,255);
+        textBoc->SetColor(0,0,0,255);
         textBov->SetColor(0,0,0,255);
 
         // textBoz->SetAlignment(1);
-        textBox->SetAlignment(1);
-        textBox->SetVerticalAlignment(2);
+        textBox->SetAlignment(0);
+        textBox->SetVerticalAlignment(1);
         // textBoc->SetAlignment(1);
         // textBov->SetAlignment(1);
         
-        textBox->printf("Your score is %d", 9001);
+        // textBox->SetText("Your score is 9001 and it is crazyy");
         textBoc->SetText(table.GetString("str_greeting"));
+        textBoz->SetText("HEALTH: %d %", 87);
         
-        textBoc->SetTextTable(&table);
-        textBoc->SetText("Hello {playerName}");
-
+        // textBoz->SetText("Hello %d", table.GetString("playerName"));
 
         m_textRenderer->setTextBox(textBoz);
         m_textRenderer->setTextBox(textBox);
         m_textRenderer->setTextBox(textBoc);
         m_textRenderer->setTextBox(textBov);
-
-        // cout<<"FINAL TEXTURE: "<<textBoz->GetFont()->GetTexture()<<endl;
-        // cout<<"FINAL TEXTURE: "<<textBox->GetFont()->GetTexture()<<endl;
-        // cout<<"FINAL TEXTURE: "<<textBoc->GetFont()->GetTexture()<<endl;
-        // cout<<"FINAL TEXTURE: "<<textBov->GetFont()->GetTexture()<<endl;
     }
 
     ~Main() {
@@ -94,27 +84,15 @@ public:
     }
 
     void render() override {
-        // glViewport(0, 0, m_width, m_height);
-        // return;
 
         glClearColor(0,0.5,0.5,255);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
 
         // Define projection and view matrices
         glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(m_width), 0.0f, static_cast<float>(m_height), -1.0f, 1.0f);
         glm::mat4 view = glm::mat4(1.0f);
 
-        textBoz->Render(proj,view);
-        textBox->Render(proj,view);
-        textBoc->Render(proj,view);
-        textBov->Render(proj,view);
-        
-
-        // Render using TextRenderer
-        // m_textRenderer->render(proj, view);
-
-        // m_textRenderer->render(m_width, m_height);
+        m_textRenderer->render(proj, view);
     }
 };
 

@@ -35,6 +35,19 @@ void TextBox::SetText(const string& text) {
     GenerateVertices();
 }
 
+void TextBox::SetText(const char* fmt, ...) {
+    if(!fmt) return;
+    char buf[1024];
+
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
+
+    // Now call our existing SetText(...) with that result
+    SetText(string(buf));
+}
+
 void TextBox::SetPosition(float x, float y) {
     m_position = glm::vec2(x, y);
         cout<<"POSIITION"<<endl;
@@ -48,7 +61,6 @@ void TextBox::SetAlignment(int alignment) {
     GenerateVertices();
 }
 
-// Add a new function for vertical alignment
 void TextBox::SetVerticalAlignment(int vAlign) {
     // 0=top, 1=middle, 2=bottom
     m_vAlign = vAlign;
@@ -70,18 +82,6 @@ void TextBox::SetShrinkToFit(bool enable) {
 }
 #pragma endregion
 
-void TextBox::printf(const char* fmt, ...) {
-    if(!fmt) return;
-    char buf[1024];
-
-    va_list args;
-    va_start(args, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, args);
-    va_end(args);
-
-    // Now call our existing SetText(...) with that result
-    SetText(string(buf));
-}
 
 float TextBox::CalculateWordWidth(const string& word){
     float wordWidth = 0.0f;

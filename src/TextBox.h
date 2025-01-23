@@ -58,7 +58,7 @@ private:
 public:
     TextBox(Font* font, const std::string& text, float width, float height, wolf::Program* shader, TextTable* pTable);
     ~TextBox();
-    void printf(const char* fmt, ...);
+    void SetText(const char* fmt, ...);
 
     // The basic setters
     void SetTextTable(TextTable* pTable);
