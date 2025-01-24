@@ -6,5 +6,4 @@ struct Vertex {
     GLubyte r, g, b, a;
     GLfloat u, v;
     GLfloat layer;
-    // GLfloat nx, ny, nz;
 };

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-// Custom hash function for std::pair<char, char>
+// Custom hash function for pair<char, char>
 struct PairHash {
     template <class T1, class T2>
     size_t operator()(const pair<T1, T2>& pair) const {
@@ -22,9 +22,9 @@ struct PairHash {
 
 class MiniFont {
 private:
-    void LoadFont(const string& fontPath);//, const std::vector<std::string>& texturePaths);
+    void LoadFont(const string& fontPath);//, const vector<string>& texturePaths);
     void ArrayTextureOfAllFiles(string filename);//, int totalPages);
-    // void LoadFont(const string& fontPath, const std::vector<std::string>& texturePaths);
+    // void LoadFont(const string& fontPath, const vector<string>& texturePaths);
 
     wolf::Texture* m_arrayTexture;
     unordered_map<char, CharInfo> m_characters;

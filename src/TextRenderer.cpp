@@ -1,7 +1,4 @@
 #include "TextRenderer.h"
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <iostream>
 using namespace std;
 
 TextRenderer::TextRenderer()
@@ -35,11 +32,11 @@ void TextRenderer::render(const glm::mat4& proj, const glm::mat4& view) {
     }
 }
 
-Font* TextRenderer::createFont(const std::string& fontDataPath) {
+Font* TextRenderer::createFont(const string& fontDataPath) {
     return new Font(fontDataPath);
 }
 
-TextBox* TextRenderer::createTextBox(Font* font, const std::string& text, float x, float y, float width, float height) {
+TextBox* TextRenderer::createTextBox(Font* font, const string& text, float x, float y, float width, float height) {
     // cout<<"Create Texture: "<<font->GetTexture()<<endl;
     auto textBox = new TextBox(font, text, width, height, TextShader, m_pTextTable);
 

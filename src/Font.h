@@ -14,7 +14,7 @@ using namespace std;
 class Font {
 private:
     vector<MiniFont*> m_fonts;
-    MiniFont m_activeFont;
+    // MiniFont m_activeFont;
 
     wolf::Texture* m_arrayTexture;
 
@@ -24,17 +24,17 @@ private:
 
 
     
-    void LoadAll(const std::string& baseName);
-    void ArrayTextureOfAllFiles(vector<string> listOfFontSizes);
+    void LoadAll(const string& baseName);
+    void ArrayTextureOfAllFiles(const vector<string>& listOfFontSizes);
 
 public:
     Font(const string& fontPath);
     ~Font();
 
 
-    const std::vector<MiniFont*>& GetFonts() const;
+    const vector<MiniFont*>& GetFonts() const;
 
-    MiniFont &getActiveFont();
+    // MiniFont &getActiveFont();
     
     const CharInfo& GetCharacter(char c, int index) const;
     const int GetLineHeight(int index);

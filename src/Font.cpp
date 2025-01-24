@@ -25,7 +25,7 @@ Font::~Font() {
 //     }
 //     string baseName = filename.substr(0, lastDot); // Get "data/English_Alphabet"
 //     for (int i = 0; i <= totalPages-1; ++i) {
-//         std::string textureFile = baseName + "_" + to_string(i) + ".tga";
+//         string textureFile = baseName + "_" + to_string(i) + ".tga";
 //         cout<<"Looking for: "<<textureFile<<endl;
 //         files.push_back(textureFile);
 //     }
@@ -33,83 +33,70 @@ Font::~Font() {
 //     cout<<"Im here"<<endl;
 // }
 
-void Font::ArrayTextureOfAllFiles(vector<string> listOfFontSizes)//, int totalPages)
+void Font::LoadAll(const string& fileName)
 {
-    vector<string> files;
-    for(auto x : listOfFontSizes)
-    {
-        cout<<"WHAT: "<<x<<endl;
-    }
+    cout << "[Font::LoadAll] Base .fnt: " << fileName << endl;
 
-    for(int i = 0; i < listOfFontSizes.size(); i++)
-    {
-        int pages = m_fonts[i]->GetPages();
+    string baseName = "data/Fonts/" + fileName;
 
-        for (int i = 0; i <= pages-1; ++i) {
-            string textureFile = listOfFontSizes[i] + "_" + to_string(i) + ".tga";
-            cout<<"Looking for: "<<textureFile<<endl;
-            files.push_back(textureFile);
-        }
-    }
-    m_arrayTexture = wolf::TextureManager::CreateAutoArrayTexture(files);
-}
-
-void Font::LoadAll(const std::string& fileName) {
-    cout<<"++BASENAME:     "<<fileName<<endl;
-
-    vector<string> baseNames;
-
-    size_t lastDot = fileName.find_last_of('.'); //remove .fnt
-    if (lastDot == string::npos) {
-        cerr << "Invalid filename: " << fileName << endl;
-        return;
-    }
-    
-    string baseName = fileName.substr(0, lastDot); // Get "data/English_Alphabet"
-
-    cout<<"++BASENAME:     "<<baseName<<endl;
-
-    // baseName e.g. "data/test"
-    // we load test0.fnt, test1.fnt, test2.fnt,... up to count-1
-    // assume 0 is largest -> 1 is smaller -> 2 is smallest
-    // or reverse if you want
-
-    int count = 0;
+    vector<string> variationBaseNames;
     int pageOffset = 0;
-    // for(int i=0; i<count; i++){
-    while(true){
-        // e.g. "data/test0.fnt"
-        std::stringstream ss;
-        ss << baseName << count << ".fnt";
-        // string dataFile = ss.str();
-        string dataFile = baseName + to_string(count) + ".fnt";
-        
-        ifstream file(dataFile);
+    int count = 0;
 
-        if (!file.is_open()) {
-            cout<<"File is empty: "<<dataFile<<endl;
+    while(true) {
+        // "data/test0.fnt"
+        stringstream ss;
+        ss << baseName << count << ".fnt";
+        string dataFile = ss.str();
+
+        ifstream file(dataFile);
+        if(!file.is_open()) {
+            // no more variations
             break;
         }
         file.close();
 
-        MiniFont* f = new MiniFont(dataFile, pageOffset);
-        baseNames.push_back(baseName);
+        MiniFont* mini = new MiniFont(dataFile, pageOffset);
+        if(!mini) break;
 
-        if(f == nullptr)    break;
+        pageOffset += mini->GetPages();
 
-        pageOffset += f->GetPages(); //Might have to add 1 cuz it starts at 0 RECHECKKKKKKKKKKKKKKKKKKKKK
-        
-        m_fonts.push_back(f);
+        m_fonts.push_back(mini);
+
+        // store e.g. "data/test0" for array textures
+        stringstream ss2;
+        ss2 << baseName << count;
+        variationBaseNames.push_back(ss2.str());
+
         count++;
     }
 
-    ArrayTextureOfAllFiles(baseNames);
+    // now we create one big array texture for all pages
+    ArrayTextureOfAllFiles(variationBaseNames);
 
-    cout<<"=-=-LOAD ALL DONE"<<endl;
-
-    // Now m_fonts[0] is presumably largest, m_fonts[1] is smaller
+    cout << "[Font::LoadAll] # of mini-fonts loaded: " << m_fonts.size() << endl;
 }
 
+void Font::ArrayTextureOfAllFiles(const vector<string>& listOfFontSizes)
+{
+    cout << "[Font::ArrayTextureOfAllFiles] building array texture..." << endl;
+    vector<string> files;
+
+    // for each mini-font variation i
+    for (int i=0; i < (int)listOfFontSizes.size(); i++){
+        int pages = m_fonts[i]->GetPages();
+        for(int j=0; j < pages; j++){
+            // e.g. "data/test0_0.tga"
+            string textureFile = listOfFontSizes[i] + "_" + to_string(j) + ".tga";
+            cout << "  Looking for: " << textureFile << endl;
+            files.push_back(textureFile);
+        }
+    }
+
+    // now create the big array texture
+    m_arrayTexture = wolf::TextureManager::CreateAutoArrayTexture(files);
+    cout << "[Font::ArrayTextureOfAllFiles] Done creating array texture.\n";
+}
 
 const CharInfo& Font::GetCharacter(char c, int index) const{
     
@@ -122,13 +109,10 @@ const unordered_map<pair<char, char>, int, PairHash>& Font::GetKerning(int index
     return m_fonts[index]->GetKerning();
 }
 
-const std::vector<MiniFont*>& Font::GetFonts() const {
+const vector<MiniFont*>& Font::GetFonts() const {
     return m_fonts;
 }
 
-// const int Font::GetLineHeight(){
-//     return m_lineHeight;
-// }
 wolf::Texture* Font::GetTexture() const {
     return m_arrayTexture;
 }

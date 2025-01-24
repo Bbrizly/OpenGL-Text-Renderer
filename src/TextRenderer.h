@@ -8,8 +8,10 @@
 #include <string>
 #include <vector>
 #include "TextTable.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 using namespace std;
-// #include "Grid2D.h"
+
 class Grid2D;
 
 class TextRenderer {

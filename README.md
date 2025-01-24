@@ -1,6 +1,29 @@
 # Text-Renderer
  OpenGL Text Renderer
 
+---
+
+How to add more fonts?
+- Open BmFont
+- Chooose a font [Since you're going to be repeating these steps start with the largest font you want]
+- Export it as a .fnt file and choose .txt font descriptor & .tga for textures 
+- Ctrl + S to save it and make sure to place it within "data/Fonts/"
+- Name the file a simple name for example "Arial0"
+- Repeat the process for each font size and name it accordingly (Arial1, Arial2, etc.)
+
+- Finally, in main write the following line of code to load the font:
+
+    Font* font = m_textRenderer->createFont("TimesNewRoman");
+
+Make sure to use the name only without the number afterwards.
+ex. Arial0 would be written as createFont("Arial")
+
+---
+
+
+
+
+
 Uses Array textures for 
 
 Textbox Functionality:

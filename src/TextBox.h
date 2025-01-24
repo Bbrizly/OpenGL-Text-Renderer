@@ -1,122 +1,144 @@
 #pragma once
-
 #include <string>
 #include <vector>
-#include <cstdarg>
 #include <glm/glm.hpp>
-#include "../wolf/wolf.h"
+#include <unordered_map>
 #include "Font.h"
-#include "TextTable.h"
-#include "CharInfo.h"
 #include "Vertex.h"
+#include "../wolf/wolf.h"
+#include "TextTable.h"
+#include <sstream>
+#include <cstdarg>
+#include <cmath>
+#include <algorithm>
+#include <iostream>
+#include <glm/gtc/matrix_transform.hpp>
 
-class TextBox {
+class TextTable;
+
+class TextBox
+{
 public:
     TextBox(Font* font,
-            const string& text,
+            const std::string& text,
             float width,
             float height,
             wolf::Program* shader,
-            TextTable* pTable = nullptr);
+            TextTable* pTable);
     ~TextBox();
 
-    void SetTextTable(TextTable* pTable);
+    // If you want to re-use the same text box but with new text
+    // it re-generates the geometry
+    void SetText(const std::string& text);
 
-    // Basic ways to set text
-    void SetText(const string& text);
+    // C-style varargs
     void SetText(const char* fmt, ...);
 
-    // Position, color, alignment, etc.
-    void SetPosition(float x, float y);
-    void SetAlignment(int alignment);         // 0=left, 1=center, 2=right
-    void SetVerticalAlignment(int vAlign);    // 0=top, 1=middle, 2=bottom
-    void SetColor(float r, float g, float b, float a);
-    void SetVisualization(bool visualization);
+    // Ties this text box to a string key from the text table
+    // so that if the table changes language/properties, we auto-regen text.
+    // e.g. textBox->ObserveTextID("str_greeting");
+    void ObserveTextID(const std::string& textID);
 
-    // If text doesn't fit, try smaller scale
+    void SetTextTable(TextTable* pTable);
+    void SetPosition(float x, float y);
+    void SetColor(float r, float g, float b, float a);
+    void SetAlignment(int alignment);          // 0=left,1=center,2=right
+    void SetVerticalAlignment(int vAlignment); // 0=top,1=middle,2=bottom
+    void SetVisualization(bool visualization); // debug bounding box
     void SetShrinkToFit(bool enable);
 
-    // The final draws
+    // If we have multiple font sizes in a single Font, pick the index
+    // 0 => largest, 1 => smaller, etc.
+    void SetFontIndex(int index) { m_fontIndex = index; GenerateVertices(); }
+
+    // main call
     void Render(const glm::mat4& proj, const glm::mat4& view);
 
-    // Access
+    // convenience
     Font* GetFont() const;
-    const vector<Vertex>& GetVertices() const;
+    const std::vector<Vertex>& GetVertices() const;
+
+    // Re-generate geometry if text table changed
+    // (This is called automatically if you used ObserveTextID)
+    void OnTextTableChanged();
 
 private:
-    // The main logic
+    // -------------- The big pipeline --------------
     void GenerateVertices();
+    std::string SubstitutePlaceholders(const std::string& raw) const;
 
+    // step 1: tokenization
+    std::vector<std::string> TokenizeText(const std::string& text) const;
 
-    // Step 1: do placeholders if we have a table
-    string SubstitutePlaceholders(const string& raw) const;
+    // step 2: wrap/hyphen for a given scale
+    std::vector<std::string> WrapAndHyphenate(const std::string& text,
+                                              float scale) const;
 
-    // Step 2: word-wrap & hyphenate, returning lines
-    // If we can't fit everything, we set a bool that we truncated.
-    vector<string> WrapAndHyphenate(const string& text,
-                                              float scale,
-                                              bool& truncated);
-    
-    vector<string> Truncate(vector<string> lines, float scale);
+    // step 3: check if it fits in the box at that scale
+    bool FitsInBox(const std::vector<std::string>& lines, float scale) const;
 
-    // Step 3: measure lines to see if they fit in box. If they don't, we reduce scale.
-    bool FitsInBox(const vector<string>& lines,
-                   float scale);
+    // step 4: pick best scale from 1 down to e.g. 0.05
+    // if none fits, we do truncation
+    void FindBestMiniFontAndWrap(const std::string& text, std::vector<std::string>& finalLines);
 
-    // Basic text metrics
-    float CalculateWordWidth(const string& word);
+    // step 5: if still not fit, we do truncation
+    void TruncateLines(std::vector<std::string>& lines, float scale);
 
-    // Build final quads from lines
-    void BuildVerticesFromLines(const vector<string>& lines,
+    // step 6: build final geometry
+    void BuildVerticesFromLines(const std::vector<std::string>& lines,
                                 float scale,
                                 bool truncated);
+    void BuildVerticesActual(const std::vector<std::string>& lines,
+                             float scale);
+    void GenerateCharacterVertices(const CharInfo& ch, float x, float y,
+                                   float texW, float texH, float scale);
 
-    void BuildVerticesActual(const vector<string>& lines,
-                                  float scale);
-
-    // Helpers
-    glm::vec2 CalculateAlignmentCursor(const string& line,
+    // alignment
+    glm::vec2 CalculateAlignmentCursor(const std::string& line,
                                        float lineWidth,
                                        float cursorY,
-                                       float scale);
-    void ApplyKerning(char prevChar, char c,
-                      float scale,
-                      float& xCursor);
+                                       float scale) const;
+    void ApplyKerning(char prevChar, char c, float scale, float& xCursor);
 
-    void GenerateCharacterVertices(const CharInfo& ch,
-                                   float x,
-                                   float y,
-                                   float textureWidth,
-                                   float textureHeight,
-                                   float scale);
+    // measure
+    float CalculateWordWidth(const std::string& word) const;
 
+    // bounding box debug
     void GenerateBoundingBoxVertices();
+
+    // GPU push
     void pushVertexData(wolf::VertexBuffer*& vBuffer,
                         wolf::VertexDeclaration*& vDecl,
-                        const vector<Vertex>& vertices);
+                        const std::vector<Vertex>& inVerts);
 
 private:
-    Font*  m_font;
-    int m_fontIndex;
-    string m_text;
+    Font* m_font;
+    TextTable* m_pTextTable;  // for placeholders
+    std::string m_text;       // the raw text (could be a direct string or a textID)
+    std::string m_observeID;  // if non-empty, we auto-get the text from the table
+
+    float m_positionX, m_positionY;
     float m_width, m_height;
-    glm::vec4 m_color;
-    glm::vec2 m_position;
 
-    bool   m_visualization = true;
-    bool   m_shrinkToFit   = true;
+    // alignment
+    int m_hAlign = 0; // 0=left,1=center,2=right
+    int m_vAlign = 0; // 0=top,1=middle,2=bottom
 
-    int m_hAlign=0;  // 0=left
-    int m_vAlign=0;  // 0=top
+    // debugging
+    bool m_visualization = true;
+    bool m_shrinkToFit = false;
 
-    // If user typed a super-long word that can't fit -> we do a hyphen break
-    // If even that can't help, eventually we do ellipses
+    // which miniFont index in m_font do we use?
+    int m_fontIndex = 0;
 
-    wolf::Program*  m_pProgram;
-    wolf::VertexBuffer* m_vertexBuffer=nullptr;
-    wolf::VertexDeclaration* m_vertexDecl=nullptr;
-    vector<Vertex> m_vertices;
-    size_t m_numVertices=0;
+    glm::vec4 m_color; // (r,g,b,a)
 
-    TextTable* m_pTextTable=nullptr;
+    // GPU
+    wolf::Program* m_pProgram;
+    wolf::VertexBuffer* m_vertexBuffer = nullptr;
+    wolf::VertexDeclaration* m_vertexDecl = nullptr;
+    int m_numVertices = 0;
+
+    // CPU data
+    std::vector<Vertex> m_vertices;
 };
