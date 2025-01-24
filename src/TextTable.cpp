@@ -1,8 +1,4 @@
 #include "TextTable.h"
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-#include <iostream>
 
 TextTable::TextTable(const string& path)
 {

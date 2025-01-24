@@ -17,9 +17,7 @@ TextBox::TextBox(Font* font,
       m_pProgram(shader),
       m_color(255,255,255,255)
 {
-    if(m_pTextTable) {
-        // Register as observer so if TextTable changes (language/properties),
-        // this TextBox re-generates text automatically:
+    if(m_pTextTable) { //Trying to get if info changes in texttable for it to change the rendered text.
         m_pTextTable->RegisterOnChange([this](){
             this->OnTextTableChanged();
         });
@@ -56,18 +54,16 @@ void TextBox::SetText(const char* fmt, ...)
     SetText(string(buf));
 }
 
-void TextBox::ObserveTextID(const string& textID)
-{
-    m_observeID = textID;
-    if(m_pTextTable) {
-        try {
-            m_text = m_pTextTable->GetString(m_observeID);
-        } catch(...) {
-            // ignore or log
-        }
-    }
-    GenerateVertices();
-}
+// void TextBox::ObserveTextID(const string& textID)
+// {
+//     m_observeID = textID;
+//     if(m_pTextTable) {
+//         try {
+//             m_text = m_pTextTable->GetString(m_observeID);
+//         } catch(...) {}
+//     }
+//     GenerateVertices();
+// }
 
 void TextBox::SetTextTable(TextTable* pTable)
 {
@@ -85,9 +81,7 @@ void TextBox::OnTextTableChanged()
     if(!m_observeID.empty() && m_pTextTable) {
         try {
             m_text = m_pTextTable->GetString(m_observeID);
-        } catch(...) {
-            // ignore or log
-        }
+        } catch(...) {}
     }
     GenerateVertices();
 }
@@ -123,36 +117,25 @@ void TextBox::SetVisualization(bool visualization)
     GenerateVertices();
 }
 
-void TextBox::SetShrinkToFit(bool enable)
-{
-    m_shrinkToFit = enable;
-    GenerateVertices();
-}
-
 void TextBox::GenerateVertices()
 {
     m_vertices.clear();
 
-    // optional bounding box debug
     if(m_visualization) {
         GenerateBoundingBoxVertices();
     }
 
     if(m_text.empty()) {
-        // No text at all => Just push bounding box or nothing
         pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
         return;
     }
 
-    // 1) Apply placeholders from text table, if any:
     string substituted = SubstitutePlaceholders(m_text);
 
-    // 2) Find a MiniFont index that fits at scale=1, or pick the smallest and truncate
     float scale = 1.0f;
     vector<string> finalLines;
     FindBestMiniFontAndWrap(substituted, finalLines);
 
-    // 3) Truncate lines if they exceed box height
     bool truncated = false;
     float totalH = finalLines.size() * (m_font->GetLineHeight(m_fontIndex) * scale);
     if(totalH > m_height) {
@@ -160,14 +143,10 @@ void TextBox::GenerateVertices()
         TruncateLines(finalLines, scale);
     }
 
-    // 4) Build final geometry
     BuildVerticesFromLines(finalLines, scale, truncated);
 
-    // 5) Push to GPU
     pushVertexData(m_vertexBuffer, m_vertexDecl, m_vertices);
 }
-
-// ------------------------- SUB-PROCESSES -------------------------
 
 string TextBox::SubstitutePlaceholders(const string& raw) const
 {
@@ -175,7 +154,6 @@ string TextBox::SubstitutePlaceholders(const string& raw) const
     return m_pTextTable->Substitute(raw);
 }
 
-// Tokenize on whitespace and handle forced line breaks
 vector<string> TextBox::TokenizeText(const string& text) const
 {
     vector<string> tokens;
@@ -183,7 +161,6 @@ vector<string> TextBox::TokenizeText(const string& text) const
     for(size_t i=0; i<text.size(); i++) {
         char c = text[i];
         if(c=='\n') {
-            // flush current, then push special token
             if(!cur.empty()) {
                 tokens.push_back(cur);
                 cur.clear();
@@ -191,12 +168,10 @@ vector<string> TextBox::TokenizeText(const string& text) const
             tokens.push_back("\n"); 
         }
         else if(isspace((unsigned char)c)) {
-            // flush
             if(!cur.empty()) {
                 tokens.push_back(cur);
                 cur.clear();
             }
-            // ignoring multiple spaces
         }
         else {
             cur.push_back(c);
@@ -223,7 +198,7 @@ vector<string> TextBox::WrapAndHyphenate(const string& text,
     for(size_t i=0; i<tokens.size(); i++){
         const string& token = tokens[i];
 
-        // forced line break
+        // forcedd line break, could be good if u just write hella and throw it into texttable
         if(token=="\n") {
             lines.push_back(currentLine);
             currentLine.clear();
@@ -236,20 +211,16 @@ vector<string> TextBox::WrapAndHyphenate(const string& text,
                              ? tokenW
                              : (currentW + spaceW + tokenW);
 
-        // If token alone is bigger than maxWidth => hyphenate
         if(tokenW > maxWidth) {
-            // flush current
             if(!currentLine.empty()) {
                 lines.push_back(currentLine);
                 currentLine.clear();
             }
-            // break token
             string sub;
             for(size_t c=0; c<token.size(); c++){
                 sub.push_back(token[c]);
                 float subW = CalculateWordWidth(sub)*scale;
                 if(subW > maxWidth) {
-                    // remove last char(s), add '-'
                     if(!sub.empty()) sub.pop_back();
                     if(!sub.empty()) sub.pop_back();
                     sub += "-";
@@ -265,16 +236,13 @@ vector<string> TextBox::WrapAndHyphenate(const string& text,
             continue;
         }
 
-        // else check if it fits in current line
         if(widthIfAdded <= maxWidth) {
-            // fits
             if(currentLine.empty()) {
                 currentLine = token;
             } else {
                 currentLine += " " + token;
             }
         } else {
-            // push current line, start new
             lines.push_back(currentLine);
             currentLine = token;
         }
@@ -287,8 +255,6 @@ vector<string> TextBox::WrapAndHyphenate(const string& text,
     return lines;
 }
 
-// Simple check: total lines * lineHeight <= box height?
-// also each line's width <= box width
 bool TextBox::FitsInBox(const vector<string>& lines, float scale) const
 {
     float lineH = m_font->GetLineHeight(m_fontIndex)*scale;
@@ -302,45 +268,33 @@ bool TextBox::FitsInBox(const vector<string>& lines, float scale) const
     return true;
 }
 
-// Instead of scaling down, we just do scale=1.0 and try next mini-font index
-// until we find one that fits. If none fit, we choose the smallest and go with it.
 void TextBox::FindBestMiniFontAndWrap(const string& text,
                                       vector<string>& outLines)
 {
     float scale = 1.0f;
 
-    // Start from current font index, try each subsequent index
-    // (assuming index 0 is largest, 1 is smaller, etc.)
-    // If you prefer always from largest to smallest, start from 0. 
-    // But here we respect the user-chosen m_fontIndex as the starting point.
     int attempt = m_fontIndex;
     int numFonts = (int)m_font->GetFonts().size();
 
     while(attempt < numFonts)
     {
-        // temporarily switch to that mini font
+        // switch to a mini-er font
         int backupIndex = m_fontIndex;
         m_fontIndex = attempt;
 
         auto lines = WrapAndHyphenate(text, scale);
         if(FitsInBox(lines, scale)) {
-            // success
             outLines = lines;
             return;
         }
-        // revert index, go next
         m_fontIndex = backupIndex;
         attempt++;
     }
-
-    // If we reach here => none of them fit at scale=1. 
-    // Let's pick the smallest mini-font (last index) and wrap anyway,
-    // so we can do partial truncation later.
     m_fontIndex = numFonts - 1;
     outLines = WrapAndHyphenate(text, scale);
 }
 
-// Remove lines from bottom until total height fits. Then add "..."
+// Remove lines from bottom 1 by 1 until total height fits. Then add "..." at the end (font forget to rmeove 3 chars before)
 void TextBox::TruncateLines(vector<string>& lines, float scale)
 {
     float lineH = m_font->GetLineHeight(m_fontIndex)*scale;
@@ -354,7 +308,6 @@ void TextBox::TruncateLines(vector<string>& lines, float scale)
         lines.pop_back();
     }
 
-    // if we removed anything, we add "..." to the last line
     if(!lines.empty()) {
         string& lastLine = lines.back();
         if(lastLine.size()>3){
@@ -381,14 +334,11 @@ void TextBox::BuildVerticesActual(const vector<string>& lines,
     float lineH = m_font->GetLineHeight(m_fontIndex)* scale;
 
     float totalH = lines.size()* lineH;
-    float startY = m_positionY; // top anchor
+    float startY = m_positionY;
 
-    // vertical alignment
     if(m_vAlign==1) {
-        // center
         startY = m_positionY - ((m_height - totalH)*0.5f);
     } else if(m_vAlign==2) {
-        // bottom
         startY = m_positionY - (m_height - totalH);
     }
 
@@ -400,7 +350,6 @@ void TextBox::BuildVerticesActual(const vector<string>& lines,
 
         for(size_t i=0; i<line.size(); i++){
             char c = line[i];
-            // kerning
             if(i>0) {
                 char prevC = line[i-1];
                 ApplyKerning(prevC, c, scale, cursor.x);
@@ -436,7 +385,6 @@ void TextBox::GenerateCharacterVertices(const CharInfo& ch,
 
     float page = (float)ch.page;
 
-    // 2 triangles for each glyph
     Vertex v1a = {xpos,   ypos - h, 0.f, R,G,B,A, u0, v1, page};
     Vertex v1b = {xpos+w, ypos - h, 0.f, R,G,B,A, u1, v1, page};
     Vertex v1c = {xpos,   ypos,     0.f, R,G,B,A, u0, v0, page};

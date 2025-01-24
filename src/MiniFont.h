@@ -22,14 +22,12 @@ struct PairHash {
 
 class MiniFont {
 private:
-    void LoadFont(const string& fontPath);//, const vector<string>& texturePaths);
-    void ArrayTextureOfAllFiles(string filename);//, int totalPages);
-    // void LoadFont(const string& fontPath, const vector<string>& texturePaths);
+    void LoadFont(const string& fontPath);
+    void ArrayTextureOfAllFiles(string filename);
 
     wolf::Texture* m_arrayTexture;
     unordered_map<char, CharInfo> m_characters;
     unordered_map<pair<char, char>, int, PairHash> m_kerning;
-    // unordered_map<pair<char, char>, int> m_kerning;
     
     int m_lineHeight = 0; // Distance between lines
     int m_scaleW;     // Texture width

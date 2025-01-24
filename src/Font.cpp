@@ -14,25 +14,6 @@ Font::~Font() {
         m_arrayTexture = nullptr;
 }
 
-// void Font::ArrayTextureOfAllFiles(string filename, int totalPages)
-// {
-//     vector<string> files;
-//     cout<<"open font file: " + filename<<endl;
-//     size_t lastDot = filename.find_last_of('.'); //remove .fnt
-//     if (lastDot == string::npos) {
-//         cerr << "Invalid filename: " << filename << endl;
-//         return;
-//     }
-//     string baseName = filename.substr(0, lastDot); // Get "data/English_Alphabet"
-//     for (int i = 0; i <= totalPages-1; ++i) {
-//         string textureFile = baseName + "_" + to_string(i) + ".tga";
-//         cout<<"Looking for: "<<textureFile<<endl;
-//         files.push_back(textureFile);
-//     }
-//     m_arrayTexture = wolf::TextureManager::CreateAutoArrayTexture(files);
-//     cout<<"Im here"<<endl;
-// }
-
 void Font::LoadAll(const string& fileName)
 {
     cout << "[Font::LoadAll] Base .fnt: " << fileName << endl;
@@ -44,14 +25,12 @@ void Font::LoadAll(const string& fileName)
     int count = 0;
 
     while(true) {
-        // "data/test0.fnt"
         stringstream ss;
         ss << baseName << count << ".fnt";
         string dataFile = ss.str();
 
         ifstream file(dataFile);
         if(!file.is_open()) {
-            // no more variations
             break;
         }
         file.close();
@@ -63,7 +42,6 @@ void Font::LoadAll(const string& fileName)
 
         m_fonts.push_back(mini);
 
-        // store e.g. "data/test0" for array textures
         stringstream ss2;
         ss2 << baseName << count;
         variationBaseNames.push_back(ss2.str());
@@ -71,7 +49,7 @@ void Font::LoadAll(const string& fileName)
         count++;
     }
 
-    // now we create one big array texture for all pages
+    // now we create one big array texture for ALLLLL pages
     ArrayTextureOfAllFiles(variationBaseNames);
 
     cout << "[Font::LoadAll] # of mini-fonts loaded: " << m_fonts.size() << endl;

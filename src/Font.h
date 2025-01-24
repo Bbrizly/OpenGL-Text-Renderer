@@ -14,12 +14,11 @@ using namespace std;
 class Font {
 private:
     vector<MiniFont*> m_fonts;
-    // MiniFont m_activeFont;
 
     wolf::Texture* m_arrayTexture;
 
     int m_lineHeight = 0; // Distance between lines
-    int m_scaleW;     // Texture width
+    int m_scaleW;      // Texture width
     int m_scaleH;     // Texture height
 
 
@@ -34,13 +33,11 @@ public:
 
     const vector<MiniFont*>& GetFonts() const;
 
-    // MiniFont &getActiveFont();
     
     const CharInfo& GetCharacter(char c, int index) const;
     const int GetLineHeight(int index);
     const unordered_map<pair<char, char>, int, PairHash>& GetKerning(int index) const;
 
-    // const int GetLineHeight();
     wolf::Texture* GetTexture() const;
 
 };

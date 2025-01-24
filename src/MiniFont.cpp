@@ -9,7 +9,6 @@ MiniFont::MiniFont(const string& fontPath, int pageOffset) {
 
 MiniFont::MiniFont() 
     : m_lineHeight(0), m_scaleW(0), m_scaleH(0), m_pages(1), m_arrayTexture(nullptr) {
-    // Initialize members with default values
 }
 
 MiniFont::~MiniFont() {
@@ -19,30 +18,7 @@ MiniFont::~MiniFont() {
         m_arrayTexture = nullptr;
 }
 
-void MiniFont::ArrayTextureOfAllFiles(string filename)//, int totalPages)
-{
-    vector<string> files;
-    cout<<"open font file: " + filename<<endl;
-
-    size_t lastDot = filename.find_last_of('.'); //remove .fnt
-    if (lastDot == string::npos) {
-        cerr << "Invalid filename: " << filename << endl;
-        return;
-    }
-    
-    string baseName = filename.substr(0, lastDot); // Get "data/English_Alphabet"
-
-    for (int i = 0; i <= m_pages-1; ++i) {
-        string textureFile = baseName + "_" + to_string(i) + ".tga";
-        cout<<"Looking for: "<<textureFile<<endl;
-        files.push_back(textureFile);
-    }
-
-    m_arrayTexture = wolf::TextureManager::CreateAutoArrayTexture(files);
-    cout<<"Im here"<<endl;
-}
-
-void MiniFont::LoadFont(const string& fontPath){//, const vector<string>& texturePaths) {
+void MiniFont::LoadFont(const string& fontPath){
     ifstream file(fontPath);
 
     if (!file.is_open()) {
@@ -53,7 +29,6 @@ void MiniFont::LoadFont(const string& fontPath){//, const vector<string>& textur
     m_pages = 1;
     while (getline(file, line)) {
         if (line.rfind("info", 0) == 0) {
-            // I think I need to use the info in info??
         } else if (line.rfind("common", 0) == 0) {
             istringstream iss(line);
             string key;
@@ -71,13 +46,10 @@ void MiniFont::LoadFont(const string& fontPath){//, const vector<string>& textur
             }
         } else if (line.rfind("page", 0) == 0) {
             size_t filePos = line.find("file=");
-            // cout<<"AA: "<<line.rfind("file", 0)<<endl;
+            
             if (filePos != string::npos) {
-                string textureFile = line.substr(filePos + 6); // sskip "file=\""
+                string textureFile = line.substr(filePos + 6);
                 textureFile.pop_back(); // Remove the behind shit 
-                
-                // cout << "Loading texture: " << textureFile << endl;
-                // m_texture = wolf::TextureManager::CreateTexture("data/"+textureFile);
             }
         } else if (line.rfind("char", 0) == 0) {
             // Parse char tag
@@ -107,7 +79,7 @@ void MiniFont::LoadFont(const string& fontPath){//, const vector<string>& textur
                 }
             }
 
-            if(ch.uStart < 0){cout<<"AHA"<<endl; continue;} //shit is fucking dumb
+            if(ch.uStart < 0){cout<<"AHA"<<endl; continue;}
 
             //Debugg
             // cout << "\nChar ID: " << id << "\n"
@@ -119,10 +91,8 @@ void MiniFont::LoadFont(const string& fontPath){//, const vector<string>& textur
             //     << " yOffset: " << ch.yOffset << "\n"
             //     << " xAdvance: " << ch.xAdvance << "\n";
 
-            // Add character to the map
             m_characters[id] = ch;
             
-        //more kerning shit that doesnt work
         } else if (line.rfind("kerning", 0) == 0) {
             //  If they kern then remove the amount of pixels from .fnt 
             int first, second, amount;
@@ -133,8 +103,6 @@ void MiniFont::LoadFont(const string& fontPath){//, const vector<string>& textur
 
 
     file.close();
-    
-    // ArrayTextureOfAllFiles(fontPath);//, m_pages);  NOW DOING IN FONT CLASS :D
 
     if (m_characters.find('?') == m_characters.end()) {
         throw runtime_error("Fallback character '?' is missing in the font map.");
