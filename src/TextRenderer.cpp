@@ -40,7 +40,6 @@ Font* TextRenderer::createFont(const std::string& fontDataPath) {
 }
 
 TextBox* TextRenderer::createTextBox(Font* font, const std::string& text, float x, float y, float width, float height) {
-    
     // cout<<"Create Texture: "<<font->GetTexture()<<endl;
     auto textBox = new TextBox(font, text, width, height, TextShader, m_pTextTable);
 

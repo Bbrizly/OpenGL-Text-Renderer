@@ -97,6 +97,7 @@ private:
 
 private:
     Font*  m_font;
+    int m_fontIndex;
     string m_text;
     float m_width, m_height;
     glm::vec4 m_color;

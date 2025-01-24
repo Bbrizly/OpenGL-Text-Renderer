@@ -102,10 +102,10 @@ vector<string> TextBox::Truncate(vector<string> lines, float scale)
 {
     int size = lines.size();
 
-    int availableLines = (int) (m_height / m_font->GetLineHeight() * scale);
+    int availableLines = (int) (m_height / m_font->GetLineHeight(m_fontIndex) * scale);
 
-    cout<<"-- EQUATION: "<<m_height<<" / "<<m_font->GetLineHeight() * scale<<endl;
-    cout<<"     = "<< m_height / m_font->GetLineHeight() * scale<<endl;
+    cout<<"-- EQUATION: "<<m_height<<" / "<<m_font->GetLineHeight(m_fontIndex) * scale<<endl;
+    cout<<"     = "<< m_height / m_font->GetLineHeight(m_fontIndex) * scale<<endl;
 
     cout<<"-=-Av Lines"<<availableLines<<endl;
     for(auto x : lines){
@@ -389,7 +389,7 @@ bool TextBox::FitsInBox(const std::vector<std::string>& lines,
                         float scale)
 {
     // measure total height
-    float totalH = lines.size()* m_font->GetLineHeight() * scale;
+    float totalH = lines.size()* m_font->GetLineHeight(m_fontIndex) * scale;
 
     //Where to stop?
     
@@ -439,7 +439,7 @@ void TextBox::BuildVerticesFromLines(const std::vector<std::string>& lines,
 
 void TextBox::BuildVerticesActual(const std::vector<std::string>& lines,float scale)
 {
-    float totalTextHeight= lines.size()* m_font->GetLineHeight()* scale;
+    float totalTextHeight= lines.size()* m_font->GetLineHeight(m_fontIndex)* scale;
 
     float cursorY=m_position.y; // top
     // handle vertical alignment
@@ -465,13 +465,13 @@ void TextBox::BuildVerticesActual(const std::vector<std::string>& lines,float sc
                 char prevC=line[i-1];
                 ApplyKerning(prevC,c,scale,cursor.x);
             }
-            const CharInfo& ch= m_font->GetCharacter(c);
+            const CharInfo& ch= m_font->GetCharacter(c, m_fontIndex);
 
             GenerateCharacterVertices(ch,cursor.x,cursor.y,texW,texH,scale);
             cursor.x += (ch.xAdvance*scale);
         }
 
-        cursorY -= (m_font->GetLineHeight()* scale);
+        cursorY -= (m_font->GetLineHeight(m_fontIndex)* scale);
     }
 }
 
@@ -532,8 +532,8 @@ vec2 TextBox::CalculateAlignmentCursor(const std::string& line,
 
 // ====================== KERNING =====================
 void TextBox::ApplyKerning(char prevChar, char c, float scale, float& xCursor){
-    auto it= m_font->GetKerning().find({prevChar,c});
-    if(it!= m_font->GetKerning().end()){
+    auto it= m_font->GetKerning(m_fontIndex).find({prevChar,c});
+    if(it!= m_font->GetKerning(m_fontIndex).end()){
         xCursor+= (it->second* scale);
     }
 }
@@ -543,12 +543,12 @@ float TextBox::CalculateWordWidth(const std::string& word){
     float width=0.f;
     for(size_t i=0; i< word.size(); i++){
         char c= word[i];
-        const CharInfo& ch= m_font->GetCharacter(c);
+        const CharInfo& ch= m_font->GetCharacter(c, m_fontIndex);
         // kerning if i>0
         if(i>0){
             char prev= word[i-1];
-            auto kit= m_font->GetKerning().find({prev,c});
-            if(kit!= m_font->GetKerning().end()){
+            auto kit= m_font->GetKerning(m_fontIndex).find({prev,c});
+            if(kit!= m_font->GetKerning(m_fontIndex).end()){
                 width+= kit->second;
             }
         }
