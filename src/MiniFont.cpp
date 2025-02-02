@@ -75,7 +75,7 @@ void MiniFont::LoadFont(const string& fontPath){
                 } else if (key.find("xadvance=") == 0) {
                     ch.xAdvance = stoi(key.substr(9));
                 } else if (key.find("page=") == 0) {
-                    ch.page = stoi(key.substr(5)) + m_pageOffset; //FOR ARRAY TEXTURE YAYAYAYA
+                    ch.page = stoi(key.substr(5)) + m_pageOffset; //FOR ARRAY TEXTURE 
                 }
             }
 
@@ -120,7 +120,10 @@ const int MiniFont::GetPages(){
 const CharInfo& MiniFont::GetCharacter(char c) const {
     auto it = m_characters.find(c);
     if (it == m_characters.end()) {
-        throw runtime_error("Character not found: " + string(1, c));
+        // cout<<"\n\nRAJ DEBUG\n\n"<<endl;
+        it = m_characters.find('?');
+        return it->second;
+        // throw runtime_error("Character not found: " + string(1, c));
     }
     return it->second;
 }
